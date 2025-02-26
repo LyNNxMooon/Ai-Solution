@@ -42,6 +42,9 @@ dependencies:
   cached_network_image: ^3.4.1
   carousel_slider: ^5.0.0
   json_annotation: ^4.9.0
+  chewie: ^1.10.0
+  video_player: ^2.9.3
+  youtube_player_iframe: ^5.2.1
 
 dev_dependencies:
   flutter_test:

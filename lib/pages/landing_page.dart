@@ -1,13 +1,20 @@
 import 'package:ai_solution/BLoC/clients/client_bloc.dart';
 import 'package:ai_solution/BLoC/clients/client_states.dart';
+import 'package:ai_solution/BLoC/current_solutions/current_solutions_bloc.dart';
+import 'package:ai_solution/BLoC/current_solutions/current_solutions_states.dart';
+import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_bloc.dart';
+import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_states.dart';
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/constant/images.dart';
+import 'package:ai_solution/data/vos/previous_solution_vo.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -22,13 +29,120 @@ class _LandingPageState extends State<LandingPage> {
     return ListView(
       shrinkWrap: true,
       children: [
-        const Gap(70),
-        sliderSession(),
         const Gap(100),
+        sliderSession(),
+        const Gap(120),
         ourClientsSession(context),
-        const Gap(80),
+        const Gap(100),
         currentSolutionSession(context),
-        const Gap(80),
+        const Gap(100),
+        previousSolutionSession(),
+        const Gap(200),
+      ],
+    );
+  }
+
+  Widget cardVideoPlayer(PreviousSolutionVO previousSolution) {
+    final controller = YoutubePlayerController.fromVideoId(
+      videoId: previousSolution.url,
+      autoPlay: false,
+      params: const YoutubePlayerParams(
+        showFullscreenButton: true,
+        loop: true,
+      ),
+    );
+
+    return Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // Shadow color
+              spreadRadius: 3, // Spread radius
+              blurRadius: 4, // Blur radius
+              offset: const Offset(2, 3), // Offset of the shadow
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: 240,
+              child: YoutubePlayer(controller: controller),
+            ),
+            const Gap(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.black),
+                ),
+                const Gap(10),
+                Text(
+                  previousSolution.name,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            const Gap(10),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                previousSolution.description,
+                textAlign: TextAlign.center,
+              ),
+            )
+          ],
+        ));
+  }
+
+  Widget previousSolutionSession() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          "Previous Solutions",
+          style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+        ),
+        const Gap(60),
+        BlocBuilder<PreviousSolutionsBloc, PreviousSolutionsStates>(
+          builder: (context, state) {
+            if (state is PreviousSolutionsLoading) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 200),
+                child: CupertinoActivityIndicator(),
+              );
+            } else if (state is PreviousSolutionsLoaded) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 150),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 30,
+                    crossAxisSpacing: 30,
+                    mainAxisExtent: 380,
+                  ),
+                  itemBuilder: (context, index) =>
+                      cardVideoPlayer(state.previousSolutions[index]),
+                  itemCount: state.previousSolutions.length,
+                ),
+              );
+            } else if (state is PreviousSolutionsError) {
+              return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(state.message));
+            } else {
+              return SizedBox();
+            }
+          },
+        )
       ],
     );
   }
@@ -41,6 +155,88 @@ class _LandingPageState extends State<LandingPage> {
           "Current Solutions",
           style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
         ),
+        const Gap(60),
+        BlocBuilder<CurrentSolutionsBloc, CurrentSolutionsStates>(
+          builder: (context, state) {
+            if (state is CurrentSolutionsLoading) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 200),
+                child: CupertinoActivityIndicator(),
+              );
+            } else if (state is CurrentSolutionsLoaded) {
+              return Center(
+                  child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 150),
+                      height: 355,
+                      child: ListView.separated(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => Container(
+                                margin: EdgeInsets.symmetric(vertical: 10),
+                                width: 240,
+                                decoration: BoxDecoration(
+                                  color: kBtnGrayColor,
+                                  borderRadius: BorderRadius.circular(15),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black
+                                          .withOpacity(0.2), // Shadow color
+                                      spreadRadius: 3, // Spread radius
+                                      blurRadius: 4, // Blur radius
+                                      offset: const Offset(
+                                          2, 3), // Offset of the shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15),
+                                      ),
+                                      child: Image.network(
+                                        state.currentSolutions[index].url,
+                                        height: 220,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                    const Gap(10),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child: Text(
+                                        state.currentSolutions[index].name,
+                                        style: TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    const Gap(15),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      child: Text(
+                                        state.currentSolutions[index]
+                                            .description,
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                          separatorBuilder: (context, index) => const Gap(150),
+                          itemCount: state.currentSolutions.length)));
+            } else if (state is CurrentSolutionsError) {
+              return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Text(state.message));
+            } else {
+              return SizedBox();
+            }
+          },
+        )
       ],
     );
   }
@@ -102,7 +298,7 @@ class _LandingPageState extends State<LandingPage> {
       padding: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * 0.12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,6 +326,7 @@ class _LandingPageState extends State<LandingPage> {
               )
             ],
           ),
+          const Gap(140),
           SizedBox(
             width: 420,
             height: 250,
