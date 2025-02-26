@@ -17,3 +17,21 @@ class ClientsLoaded extends ClientStates {
 
   ClientsLoaded(this.clients);
 }
+
+abstract class ClientDetailStates{}
+
+class ClientDetailsInitial extends ClientDetailStates{}
+
+class LoadingClientImageByID extends ClientDetailStates {}
+
+class ErrorLoadingClientImageByID extends ClientDetailStates {
+  final String message;
+  ErrorLoadingClientImageByID(this.message);
+}
+
+class LoadedClientImageByID extends ClientDetailStates {
+
+  final ClientVO client;
+
+  LoadedClientImageByID(this.client);
+}

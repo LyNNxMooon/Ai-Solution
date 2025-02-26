@@ -8,4 +8,6 @@ abstract class LandingRepo {
   Future<List<CurrentSolutionVO>> fetchAllCurrentSolutions();
 
   Future<List<PreviousSolutionVO>> fetchAllPreviousSolutions();
+
+  Future<ClientVO> loadClientByID(String id);
 }

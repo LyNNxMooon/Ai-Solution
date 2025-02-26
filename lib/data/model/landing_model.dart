@@ -22,7 +22,7 @@ class LandingModel implements LandingRepo {
   }
 
   @override
-  Future<List<CurrentSolutionVO>> fetchAllCurrentSolutions()async {
+  Future<List<CurrentSolutionVO>> fetchAllCurrentSolutions() async {
     try {
       return await _firebaseAgent.fetchAllCurrentSolutions();
     } on Exception catch (error) {
@@ -31,9 +31,22 @@ class LandingModel implements LandingRepo {
   }
 
   @override
-  Future<List<PreviousSolutionVO>> fetchAllPreviousSolutions() async{
+  Future<List<PreviousSolutionVO>> fetchAllPreviousSolutions() async {
     try {
       return await _firebaseAgent.fetchAllPreviousSolutions();
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<ClientVO> loadClientByID(String id) async {
+    try {
+      ClientVO client = await _firebaseAgent.loadClientByID(id);
+      client.name.isEmpty
+          ? client.name = "Name Unloaded"
+          : client.name = client.name;
+      return client;
     } on Exception catch (error) {
       return Future.error(error);
     }

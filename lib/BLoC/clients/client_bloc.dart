@@ -22,3 +22,23 @@ class ClientBloc extends Bloc<ClientEvents, ClientStates> {
     }
   }
 }
+
+class ClientDetailsBloc extends Bloc<ClientEvents, ClientDetailStates> {
+  final LandingRepo landingRepo;
+
+  ClientDetailsBloc({required this.landingRepo})
+      : super(ClientDetailsInitial()) {
+    on<FetchClientByID>(_onFetchClientByID);
+  }
+
+  Future<void> _onFetchClientByID(
+      FetchClientByID event, Emitter<ClientDetailStates> emit) async {
+    try {
+      emit(LoadingClientImageByID());
+      final fetchedClientbyID = await landingRepo.loadClientByID(event.id);
+      emit(LoadedClientImageByID(fetchedClientbyID));
+    } catch (error) {
+      emit(ErrorLoadingClientImageByID('$error'));
+    }
+  }
+}

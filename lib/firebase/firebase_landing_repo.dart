@@ -21,7 +21,7 @@ class FirebaseLandingRepo implements LandingRepo {
 
   @override
   Future<List<CurrentSolutionVO>> fetchAllCurrentSolutions() async {
-   try {
+    try {
       final snapshot = await databaseRef.child("current_solutions").once();
       return snapshot.snapshot.children.map<CurrentSolutionVO>((snapshot) {
         return CurrentSolutionVO.fromJson(
@@ -44,4 +44,35 @@ class FirebaseLandingRepo implements LandingRepo {
       throw Exception("Error fetching clients: $error");
     }
   }
+
+  @override
+  Future<ClientVO> loadClientByID(String id) async {
+    try {
+      return databaseRef.child("clients").child(id).once().then(
+        (value) {
+          if (value.snapshot.value == null) {
+            return ClientVO(id: 0, name: "", url: "");
+          } else {
+            final rawData = value.snapshot.value;
+            return ClientVO.fromJson(Map<String, dynamic>.from(rawData as Map));
+          }
+        },
+      );
+    } catch (error) {
+      throw Exception("Error fetching client: $error");
+    }
+  }
 }
+
+/*
+Future<PatientVO?> getPatient(String id) async {
+    return databaseRef.child("patients").child(id).once().then((event) {
+      if (event.snapshot.value == null) {
+        return null;
+      } else {
+        final rawData = event.snapshot.value;
+        return PatientVO.fromJson(Map<String, dynamic>.from(rawData as Map));
+      }
+    });
+  }
+*/

@@ -1,4 +1,5 @@
 import 'package:ai_solution/BLoC/clients/client_bloc.dart';
+//import 'package:ai_solution/BLoC/clients/client_events.dart';
 import 'package:ai_solution/BLoC/clients/client_states.dart';
 import 'package:ai_solution/BLoC/current_solutions/current_solutions_bloc.dart';
 import 'package:ai_solution/BLoC/current_solutions/current_solutions_states.dart';
@@ -6,6 +7,7 @@ import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_bloc.dart
 import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_states.dart';
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/constant/images.dart';
+import 'package:ai_solution/data/vos/client_vo.dart';
 import 'package:ai_solution/data/vos/previous_solution_vo.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -24,6 +26,9 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+
+  List<ClientVO> clientList = [];
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -36,13 +41,15 @@ class _LandingPageState extends State<LandingPage> {
         const Gap(100),
         currentSolutionSession(context),
         const Gap(100),
-        previousSolutionSession(),
+        previousSolutionSession(context),
         const Gap(200),
       ],
     );
   }
 
-  Widget cardVideoPlayer(PreviousSolutionVO previousSolution) {
+  Widget cardVideoPlayer(
+      PreviousSolutionVO previousSolution, BuildContext context) {
+    //final clientBloc = context.read<ClientDetailsBloc>();
     final controller = YoutubePlayerController.fromVideoId(
       videoId: previousSolution.url,
       autoPlay: false,
@@ -51,7 +58,7 @@ class _LandingPageState extends State<LandingPage> {
         loop: true,
       ),
     );
-
+    //clientBloc.add(FetchClientByID(id: "${previousSolution.clientID}"));
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -72,36 +79,80 @@ class _LandingPageState extends State<LandingPage> {
               child: YoutubePlayer(controller: controller),
             ),
             const Gap(20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.black),
+            SizedBox(
+              width: double.infinity,
+              child: Center(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.network(
+                                  (clientList.firstWhere((element) => element.id == previousSolution.clientID)).url,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                      // BlocBuilder<ClientDetailsBloc, ClientDetailStates>(
+                      //   builder: (context, state) {
+                      //     if (state is LoadingClientImageByID) {
+                      //       return CupertinoActivityIndicator();
+                      //     } else if (state is LoadedClientImageByID) {
+                      //       return 
+                      //     } else if (state is ErrorLoadingClientImageByID) {
+                      //       return Container(
+                      //         width: 40,
+                      //         height: 40,
+                      //         decoration: BoxDecoration(
+                      //             borderRadius: BorderRadius.circular(20),
+                      //             color: Colors.black),
+                      //       );
+                      //     } else {
+                      //       return SizedBox();
+                      //     }
+                      //   },
+                      // ),
+                      const Gap(10),
+                      Text(
+                        previousSolution.name,
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
                 ),
-                const Gap(10),
-                Text(
-                  previousSolution.name,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
+              ),
             ),
             const Gap(10),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                previousSolution.description,
-                textAlign: TextAlign.center,
+            SizedBox(
+              height: 40,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        previousSolution.description,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             )
           ],
         ));
   }
 
-  Widget previousSolutionSession() {
+  Widget previousSolutionSession(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -130,7 +181,7 @@ class _LandingPageState extends State<LandingPage> {
                     mainAxisExtent: 380,
                   ),
                   itemBuilder: (context, index) =>
-                      cardVideoPlayer(state.previousSolutions[index]),
+                      cardVideoPlayer(state.previousSolutions[index], context),
                   itemCount: state.previousSolutions.length,
                 ),
               );
@@ -264,6 +315,8 @@ class _LandingPageState extends State<LandingPage> {
               child: CupertinoActivityIndicator(),
             );
           } else if (state is ClientsLoaded) {
+
+            clientList = state.clients;
             return SizedBox(
               height: 55,
               child: Padding(

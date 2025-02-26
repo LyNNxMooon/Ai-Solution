@@ -23,6 +23,10 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 ClientBloc(landingRepo: landingRepo)..add(FetchClients()),
           ),
+            BlocProvider<ClientDetailsBloc>(
+            create: (context) =>
+                ClientDetailsBloc(landingRepo: landingRepo)
+          ),
            BlocProvider<CurrentSolutionsBloc>(
             create: (context) =>
                 CurrentSolutionsBloc(landingRepo: landingRepo)..add(FetchCurrentSolutions()),
