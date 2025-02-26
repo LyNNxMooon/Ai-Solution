@@ -347,64 +347,60 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   Widget sliderSession() {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width * 0.12),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Software Solutions",
-                style: TextStyle(fontFamily: "KaiseiDecol", fontSize: 45),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              "Software Solutions",
+              style: TextStyle(fontFamily: "KaiseiDecol", fontSize: 45),
+            ),
+            const Gap(10),
+            SizedBox(
+              width: 400,
+              child: Text(
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the",
               ),
-              const Gap(10),
-              SizedBox(
-                width: 400,
-                child: Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the",
-                ),
-              ),
-              const Gap(20),
-              ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(
-                        const Color.fromARGB(255, 237, 232, 232)),
-                    foregroundColor: WidgetStatePropertyAll(kFourthColor)),
-                onPressed: () {},
-                child: Text("Get Started"),
-              )
-            ],
-          ),
-          const Gap(140),
-          SizedBox(
-            width: 420,
-            height: 250,
-            child: CarouselSlider.builder(
-                itemCount: carousalMockUps.length,
-                itemBuilder: (context, index, realIndex) => ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      carousalMockUps[index],
-                      fit: BoxFit.fill,
-                    )),
-                options: CarouselOptions(
-                  reverse: true,
-                  autoPlay: true,
-                  viewportFraction: 0.95,
-                  initialPage: 0,
-                  enableInfiniteScroll: true,
-                  autoPlayCurve: Curves.fastOutSlowIn,
-                  enlargeCenterPage: true,
-                  enlargeFactor: 0.7,
-                  scrollDirection: Axis.horizontal,
-                )),
-          )
-        ],
-      ),
+            ),
+            const Gap(20),
+            ElevatedButton(
+              style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                      const Color.fromARGB(255, 237, 232, 232)),
+                  foregroundColor: WidgetStatePropertyAll(kFourthColor)),
+              onPressed: () {},
+              child: Text("Get Started"),
+            )
+          ],
+        ),
+        const Gap(140),
+        SizedBox(
+          width: 420,
+          height: 250,
+          child: CarouselSlider.builder(
+              itemCount: carousalMockUps.length,
+              itemBuilder: (context, index, realIndex) => ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    carousalMockUps[index],
+                    fit: BoxFit.fill,
+                  )),
+              options: CarouselOptions(
+                reverse: true,
+                autoPlay: true,
+                viewportFraction: 0.95,
+                initialPage: 0,
+                enableInfiniteScroll: true,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enlargeCenterPage: true,
+                enlargeFactor: 0.7,
+                scrollDirection: Axis.horizontal,
+              )),
+        )
+      ],
     );
   }
 }
