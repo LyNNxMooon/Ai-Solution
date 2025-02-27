@@ -57,7 +57,7 @@ class _IndexPageState extends State<IndexPage> {
                               ? FAQPage()
                               : SizedBox(),
           Center(child: Text("Copyright 2025 - AI-Solution")),
-          const Gap(20)
+          const Gap(30)
         ],
       ),
     );
