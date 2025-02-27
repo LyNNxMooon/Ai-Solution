@@ -42,8 +42,8 @@ class _LandingPageState extends State<LandingPage> {
         currentSolutionSession(context),
         const Gap(100),
         previousSolutionSession(context),
-        const Gap(200),
-      ],
+        const Gap(120),
+      ]
     );
   }
 
@@ -227,7 +227,7 @@ class _LandingPageState extends State<LandingPage> {
                                 width: 240,
                                 decoration: BoxDecoration(
                                   color: kBtnGrayColor,
-                                  borderRadius: BorderRadius.circular(15),
+                                  borderRadius: BorderRadius.circular(7),
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black
@@ -244,8 +244,8 @@ class _LandingPageState extends State<LandingPage> {
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(15),
-                                        topRight: Radius.circular(15),
+                                        topLeft: Radius.circular(7),
+                                        topRight: Radius.circular(7),
                                       ),
                                       child: Image.network(
                                         state.currentSolutions[index].url,

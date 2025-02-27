@@ -1,4 +1,9 @@
+import 'package:ai_solution/BLoC/events/events_bloc.dart';
+import 'package:ai_solution/BLoC/events/events_states.dart';
+import 'package:ai_solution/data/vos/event_vo.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 class EventsPage extends StatefulWidget {
@@ -9,6 +14,17 @@ class EventsPage extends StatefulWidget {
 }
 
 class _EventsPageState extends State<EventsPage> {
+  List<EventVO> upcomingEvents = [];
+
+  final eventPlaceHolder = EventVO(
+      id: 0,
+      name: "Loading Event....",
+      description: "......",
+      url:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKbxFhEU0jcm9UPGfCRMkIBfK9sxxSu5W8jA&s");
+
+  int currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -18,148 +34,181 @@ class _EventsPageState extends State<EventsPage> {
         upcomingEventsSession(),
         const Gap(140),
         promotionalEventSession(),
-        const Gap(200),
+        const Gap(120),
       ],
     );
   }
 
   Widget promotionalEventSession() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 220),
-      child: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) => index % 2 != 0
-            ? SizedBox(
-                height: 380,
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: SizedBox(
-                        width: (MediaQuery.of(context).size.width - 440) * 0.7,
+        padding: const EdgeInsets.symmetric(horizontal: 220),
+        child: BlocBuilder<PromotionalEventsBloc, PromotionalEventsStates>(
+          builder: (context, state) {
+            if (state is PromotionalEventsLoading) {
+              return Center(
+                child: CupertinoActivityIndicator(),
+              );
+            } else if (state is PromotionalEventsLoaded) {
+              return ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => index % 2 != 0
+                    ? SizedBox(
                         height: 380,
-                        child: Image.network(
-                          "https://cdn.prod.website-files.com/660aa0984e7024f991719a87/66be3d390f61cfa425c6642b_66be3d302a0a3358af84c984_1718905562414.jpeg",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: (MediaQuery.of(context).size.width - 440) * 0.45,
-                        height: 280,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  Colors.black.withOpacity(0.2), // Shadow color
-                              spreadRadius: 3, // Spread radius
-                              blurRadius: 4, // Blur radius
-                              offset:
-                                  const Offset(2, 3), // Offset of the shadow
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Stack(
                           children: [
-                            Text(
-                              "Promotional Event",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: SizedBox(
+                                width:
+                                    (MediaQuery.of(context).size.width - 440) *
+                                        0.7,
+                                height: 380,
+                                child: Image.network(
+                                  state.promotionalEvents[index].url,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             ),
-                            const Gap(20),
-                            Text(
-                              "Promotional Event",
-                              style: TextStyle(
-                                  fontFamily: "KaiseiDecol", fontSize: 28),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                width:
+                                    (MediaQuery.of(context).size.width - 440) *
+                                        0.45,
+                                height: 280,
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 1),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black
+                                          .withOpacity(0.2), // Shadow color
+                                      spreadRadius: 3, // Spread radius
+                                      blurRadius: 4, // Blur radius
+                                      offset: const Offset(
+                                          2, 3), // Offset of the shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Promotional Event",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Gap(20),
+                                    Text(
+                                      state.promotionalEvents[index].name,
+                                      style: TextStyle(
+                                          fontFamily: "KaiseiDecol",
+                                          fontSize: 28),
+                                    ),
+                                    const Gap(20),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 40),
+                                      child: Text(
+                                        state.promotionalEvents[index]
+                                            .description,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
-                            const Gap(20),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 40),
-                              child: Text(
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ypesetting industry. Lorem Ipsum has been the"),
-                            )
                           ],
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : SizedBox(
-                height: 380,
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: SizedBox(
-                        width: (MediaQuery.of(context).size.width - 440) * 0.7,
+                      )
+                    : SizedBox(
                         height: 380,
-                        child: Image.network(
-                          "https://cdn.prod.website-files.com/660aa0984e7024f991719a87/66be3d390f61cfa425c6642b_66be3d302a0a3358af84c984_1718905562414.jpeg",
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        width: (MediaQuery.of(context).size.width - 440) * 0.45,
-                        height: 280,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  Colors.black.withOpacity(0.2), // Shadow color
-                              spreadRadius: 3, // Spread radius
-                              blurRadius: 4, // Blur radius
-                              offset:
-                                  const Offset(2, 3), // Offset of the shadow
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Stack(
                           children: [
-                            Text(
-                              "Promotional Event",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: SizedBox(
+                                width:
+                                    (MediaQuery.of(context).size.width - 440) *
+                                        0.7,
+                                height: 380,
+                                child: Image.network(
+                                  state.promotionalEvents[index].url,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             ),
-                            const Gap(20),
-                            Text(
-                              "Promotional Event",
-                              style: TextStyle(
-                                  fontFamily: "KaiseiDecol", fontSize: 28),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                width:
+                                    (MediaQuery.of(context).size.width - 440) *
+                                        0.45,
+                                height: 280,
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 1),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black
+                                          .withOpacity(0.2), // Shadow color
+                                      spreadRadius: 3, // Spread radius
+                                      blurRadius: 4, // Blur radius
+                                      offset: const Offset(
+                                          2, 3), // Offset of the shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Promotional Event",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Gap(20),
+                                    Text(
+                                      state.promotionalEvents[index].name,
+                                      style: TextStyle(
+                                          fontFamily: "KaiseiDecol",
+                                          fontSize: 28),
+                                    ),
+                                    const Gap(20),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 40),
+                                      child: Text(
+                                        state.promotionalEvents[index]
+                                            .description,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
-                            const Gap(20),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 40),
-                              child: Text(
-                                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ypesetting industry. Lorem Ipsum has been the"),
-                            )
                           ],
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-        itemCount: 2,
-        separatorBuilder: (context, index) => const Gap(110),
-      ),
-    );
+                itemCount: state.promotionalEvents.length,
+                separatorBuilder: (context, index) => const Gap(110),
+              );
+            } else if (state is PromotionalEventsError) {
+              return Center(
+                child: Text(state.message),
+              );
+            } else {
+              return SizedBox();
+            }
+          },
+        ));
   }
 
   Widget upcomingEventsSession() {
@@ -183,22 +232,55 @@ class _EventsPageState extends State<EventsPage> {
             ),
             const Gap(40),
             SizedBox(
-              width: 500,
-              height: 350,
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 15,
-                  mainAxisExtent: 80,
-                ),
-                itemBuilder: (context, index) => Container(
-                  color: Colors.black,
-                ),
-                itemCount: 15,
-              ),
-            )
+                width: 500,
+                height: 350,
+                child: BlocBuilder<UpcomingEventsBloc, UpcomingEventsStates>(
+                  builder: (context, state) {
+                    if (state is UpcomingEventsLoading) {
+                      return Center(child: CupertinoActivityIndicator());
+                    } else if (state is UpcomingEventsLoaded) {
+                      upcomingEvents = state.upcomingEvents;
+
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 15,
+                          mainAxisExtent: 80,
+                        ),
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              currentIndex = index;
+                            });
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                    currentIndex == index ? 12 : 0)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                  currentIndex == index ? 12 : 0),
+                              child: Image.network(
+                                state.upcomingEvents[index].url,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                        itemCount: state.upcomingEvents.length,
+                      );
+                    } else if (state is UpcomingEventsError) {
+                      return Center(
+                        child: Text(state.message),
+                      );
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                ))
           ],
         ),
         const Gap(100),
@@ -216,31 +298,66 @@ class _EventsPageState extends State<EventsPage> {
                 ),
               ],
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.network(
-                  "https://cdn.prod.website-files.com/660aa0984e7024f991719a87/66be3d390f61cfa425c6642b_66be3d302a0a3358af84c984_1718905562414.jpeg",
-                  width: double.infinity,
-                  height: 300,
-                  fit: BoxFit.fill,
-                ),
-                const Gap(30),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    "Event Title",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const Gap(20),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ypesetting industry. Lorem Ipsum has been the",
-                  ),
-                )
-              ],
+            child: BlocBuilder<UpcomingEventsBloc, UpcomingEventsStates>(
+              builder: (context, state) {
+                if (state is UpcomingEventsLoaded) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.network(
+                        upcomingEvents[currentIndex].url,
+                        width: double.infinity,
+                        height: 300,
+                        fit: BoxFit.fill,
+                      ),
+                      const Gap(30),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          upcomingEvents[currentIndex].name,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const Gap(20),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          upcomingEvents[currentIndex].description,
+                        ),
+                      )
+                    ],
+                  );
+                } else {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Image.network(
+                        eventPlaceHolder.url,
+                        width: double.infinity,
+                        height: 300,
+                        fit: BoxFit.fill,
+                      ),
+                      const Gap(30),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          eventPlaceHolder.name,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const Gap(20),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          eventPlaceHolder.description,
+                        ),
+                      )
+                    ],
+                  );
+                }
+              },
             ))
       ],
     );

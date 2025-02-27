@@ -56,6 +56,8 @@ class _IndexPageState extends State<IndexPage> {
                           : _currentIndex == 4
                               ? FAQPage()
                               : SizedBox(),
+          Center(child: Text("Copyright 2025 - AI-Solution")),
+          const Gap(20)
         ],
       ),
     );
