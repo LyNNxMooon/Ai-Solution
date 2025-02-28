@@ -25,6 +25,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+       style: TextStyle(fontSize: 12),
         obscureText: isObsecure ?? false,
         controller: controller,
         minLines: minLines,
@@ -32,6 +33,7 @@ class CustomTextField extends StatelessWidget {
         maxLines: maxLines,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         decoration: InputDecoration(
+        
           suffixIcon: suffixIcon,
           hintText: hintText,
           labelText: label,
@@ -43,6 +45,7 @@ class CustomTextField extends StatelessWidget {
               borderSide: const BorderSide(color: kFourthColor, width: 1),
               borderRadius: BorderRadius.circular(12)),
           enabledBorder: OutlineInputBorder(
+            
               borderSide: const BorderSide(width: 1, color: kFourthColor),
               borderRadius: BorderRadius.circular(10)),
         ));

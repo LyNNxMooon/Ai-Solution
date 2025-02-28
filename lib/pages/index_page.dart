@@ -223,7 +223,7 @@ class _IndexPageState extends State<IndexPage> {
               const Gap(25),
               SizedBox(
                 width: 150,
-                height: 35,
+                height: 40,
                 child: CustomTextField(
                     hintText: "Search",
                     label: "Search",
