@@ -12,7 +12,7 @@ class UpcomingEventsBloc extends Bloc<EventsEvents, UpcomingEventsStates> {
   }
 
   Future _onFetchUpcomingEvents(
-      EventsEvents event, Emitter<UpcomingEventsStates> emit) async {
+      FetchUpcomingEvents event, Emitter<UpcomingEventsStates> emit) async {
     try {
       emit(UpcomingEventsLoading());
       final fetchedUpcomingEvents = await eventsRepo.fetchAllUpComingEvents();
@@ -34,7 +34,7 @@ class PromotionalEventsBloc
   }
 
   Future _onFetchPromotionalEvents(
-      EventsEvents event, Emitter<PromotionalEventsStates> emit) async {
+      FetchPromotionalEvents event, Emitter<PromotionalEventsStates> emit) async {
     try {
       emit(PromotionalEventsLoading());
       final fetchedPromotionalEvents = await eventsRepo.fetchAllPromoEvents();

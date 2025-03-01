@@ -1,5 +1,9 @@
-import 'package:ai_solution/constant/colors.dart';
+import 'package:ai_solution/BLoC/gallery/gallery_bloc.dart';
+import 'package:ai_solution/BLoC/gallery/galllery_states.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 
 class GalleryPage extends StatefulWidget {
@@ -43,54 +47,74 @@ class _GalleryPageState extends State<GalleryPage> {
         ),
         const Gap(100),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 120),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 50,
-              crossAxisSpacing: 40,
-              mainAxisExtent: MediaQuery.of(context).size.height * 0.5,
-            ),
-            itemBuilder: (context, index) => Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.2), // Shadow color
-                    spreadRadius: 3, // Spread radius
-                    blurRadius: 4, // Blur radius
-                    offset: const Offset(2, 3), // Offset of the shadow
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    color: kMessageBubbleColor,
-                  ),
-                  const Gap(25),
-                  Text(
-                    "Gallery Name",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const Gap(10),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 60),
-                    child: Text(
-                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                      textAlign: TextAlign.center,
+            padding: EdgeInsets.symmetric(horizontal: 120),
+            child: BlocBuilder<GalleryBloc, GalleryStates>(
+              builder: (context, state) {
+                if (state is GalleryLoading) {
+                  return Center(
+                    child: CupertinoActivityIndicator(),
+                  );
+                } else if (state is GalleryLoaded) {
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 50,
+                      crossAxisSpacing: 40,
+                      mainAxisExtent: MediaQuery.of(context).size.height * 0.5,
                     ),
-                  )
-                ],
-              ),
-            ),
-            itemCount: 12,
-          ),
-        )
+                    itemBuilder: (context, index) => Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                Colors.black.withOpacity(0.2), // Shadow color
+                            spreadRadius: 3, // Spread radius
+                            blurRadius: 4, // Blur radius
+                            offset: const Offset(2, 3), // Offset of the shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            child: Image.network(
+                              state.galleries[index].url,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const Gap(25),
+                          Text(
+                            state.galleries[index].name,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          const Gap(10),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 60),
+                            child: Text(
+                              state.galleries[index].description,
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    itemCount: state.galleries.length,
+                  );
+                } else if (state is GalleryError) {
+                  return Center(
+                    child: Text(state.message),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
+            ))
       ],
     );
   }
