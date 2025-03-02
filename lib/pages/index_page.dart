@@ -29,35 +29,110 @@ class _IndexPageState extends State<IndexPage> {
 
   int _currentIndex = 0;
 
+  bool _isChatVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kPrimaryColor,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            _isChatVisible = !_isChatVisible;
+          });
+        },
         child: Icon(
           CupertinoIcons.chat_bubble_2,
           color: kFourthColor,
           size: 30,
         ),
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          naviBar(),
-          _currentIndex == 0
-              ? LandingPage()
-              : _currentIndex == 1
-                  ? EventsPage()
-                  : _currentIndex == 2
-                      ? AboutPage()
-                      : _currentIndex == 3
-                          ? GalleryPage()
-                          : _currentIndex == 4
-                              ? FAQPage()
-                              : SizedBox(),
-          Center(child: Text("Copyright 2025 - AI-Solution")),
-          const Gap(30)
+          Center(
+            child: ListView(
+              children: [
+                naviBar(),
+                _currentIndex == 0
+                    ? LandingPage()
+                    : _currentIndex == 1
+                        ? EventsPage()
+                        : _currentIndex == 2
+                            ? AboutPage()
+                            : _currentIndex == 3
+                                ? GalleryPage()
+                                : _currentIndex == 4
+                                    ? FAQPage()
+                                    : SizedBox(),
+                Center(child: Text("Copyright 2025 - AI-Solution")),
+                const Gap(30)
+              ],
+            ),
+          ),
+          if (_isChatVisible)
+            Positioned(
+              bottom: 80, // Adjust position above FAB
+              right: 20, // Align to FAB
+              child: Material(
+                elevation: 8,
+                borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  width: 400,
+                  height: 450,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      // Chat Header
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Live Chat",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                          IconButton(
+                            icon: Icon(Icons.close),
+                            onPressed: () {
+                              setState(() {
+                                _isChatVisible = false;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      Divider(),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            Text("Hello! How can I help you?"),
+                            // Chat messages will be here
+                          ],
+                        ),
+                      ),
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: "Type a message...",
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: kFourthColor)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: kFourthColor)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: kFourthColor)),
+                          suffixIcon: Icon(Icons.send),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:ai_solution/BLoC/events/events_bloc.dart';
 import 'package:ai_solution/BLoC/events/events_states.dart';
 import 'package:ai_solution/data/vos/event_vo.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shimmer/shimmer.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({super.key});
@@ -25,6 +28,11 @@ class _EventsPageState extends State<EventsPage> {
 
   int currentIndex = 0;
 
+  // ignore: unused_field
+  double _scale = 1.0;
+
+  Map<int, bool> hoverStates = {};
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -39,15 +47,101 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
+  Widget shimmerLoadingForUpcomingEvents() {
+    return SizedBox(
+      width: 500,
+      height: 370,
+      child: Shimmer.fromColors(
+        baseColor: Colors.black26,
+        highlightColor: Colors.white,
+        child: GridView.builder(
+          shrinkWrap: true,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            mainAxisSpacing: 15,
+            crossAxisSpacing: 20,
+            mainAxisExtent: 80,
+          ),
+          itemCount: 12,
+          itemBuilder: (context, index) => Container(
+            color: Colors.black26,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget shimmerLoadingForPromoEvents() {
+    return Shimmer.fromColors(
+      baseColor: Colors.black26,
+      highlightColor: Colors.white,
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) => index % 2 != 0
+            ? SizedBox(
+                height: 380,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        width:
+                            (MediaQuery.of(context).size.width - 440) * 0.7,
+                        height: 380,
+                        color: Colors.black26,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        width:
+                            (MediaQuery.of(context).size.width - 440) * 0.45,
+                        height: 280,
+                        color: Colors.black26,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox(
+                height: 380,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        color: Colors.black26,
+                        width:
+                            (MediaQuery.of(context).size.width - 440) * 0.7,
+                        height: 380,
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        width:
+                            (MediaQuery.of(context).size.width - 440) * 0.45,
+                        height: 280,
+                        color: Colors.black26,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+        itemCount: 2,
+        separatorBuilder: (context, index) => const Gap(110),
+      ),
+    );
+  }
+
   Widget promotionalEventSession() {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 220),
         child: BlocBuilder<PromotionalEventsBloc, PromotionalEventsStates>(
           builder: (context, state) {
             if (state is PromotionalEventsLoading) {
-              return Center(
-                child: CupertinoActivityIndicator(),
-              );
+              return shimmerLoadingForPromoEvents();
             } else if (state is PromotionalEventsLoaded) {
               return ListView.separated(
                 shrinkWrap: true,
@@ -233,11 +327,11 @@ class _EventsPageState extends State<EventsPage> {
             const Gap(40),
             SizedBox(
                 width: 500,
-                height: 350,
+                height: 370,
                 child: BlocBuilder<UpcomingEventsBloc, UpcomingEventsStates>(
                   builder: (context, state) {
                     if (state is UpcomingEventsLoading) {
-                      return Center(child: CupertinoActivityIndicator());
+                      return shimmerLoadingForUpcomingEvents();
                     } else if (state is UpcomingEventsLoaded) {
                       upcomingEvents = state.upcomingEvents;
 
@@ -246,31 +340,44 @@ class _EventsPageState extends State<EventsPage> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                          crossAxisSpacing: 20,
                           mainAxisExtent: 80,
                         ),
+                        itemCount: state.upcomingEvents.length,
                         itemBuilder: (context, index) => GestureDetector(
                           onTap: () {
                             setState(() {
                               currentIndex = index;
                             });
                           },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    currentIndex == index ? 12 : 0)),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                  currentIndex == index ? 12 : 0),
-                              child: Image.network(
-                                state.upcomingEvents[index].url,
-                                fit: BoxFit.cover,
+                          child: MouseRegion(
+                            onEnter: (_) =>
+                                setState(() => hoverStates[index] = true),
+                            onExit: (_) =>
+                                setState(() => hoverStates[index] = false),
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 200),
+                              curve: Curves.easeInOut,
+                              transform: Matrix4.identity()
+                                ..scale(hoverStates[index] == true ? 1.1 : 1.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                      currentIndex == index ? 12 : 0),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                      currentIndex == index ? 12 : 0),
+                                  child: Image.network(
+                                    state.upcomingEvents[index].url,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                        itemCount: state.upcomingEvents.length,
                       );
                     } else if (state is UpcomingEventsError) {
                       return Center(
@@ -286,7 +393,7 @@ class _EventsPageState extends State<EventsPage> {
         const Gap(100),
         Container(
             width: 500,
-            height: 500,
+            height: 520,
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [

@@ -1,4 +1,5 @@
 import 'package:ai_solution/constant/colors.dart';
+import 'package:ai_solution/utils/navigation_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
@@ -11,19 +12,22 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
+  List<bool> rates = <bool>[false, false, false, false, false];
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        const Gap(20),
-        aboutUsVideo(),
-        const Gap(80),
-        customerFeedBacks(),
-        const Gap(120),
-        ratings(),
-        const Gap(120)
-      ],
+    return Center(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          const Gap(20),
+          aboutUsVideo(),
+          const Gap(80),
+          customerFeedBacks(),
+          const Gap(120),
+          ratings(),
+          const Gap(120)
+        ],
+      ),
     );
   }
 
@@ -105,23 +109,141 @@ class _AboutPageState extends State<AboutPage> {
           padding: const EdgeInsets.only(left: 125),
           child: Align(
             alignment: Alignment.centerLeft,
-            child: Container(
-              width: 300,
-              height: 50,
-              decoration: BoxDecoration(
-                border: Border.all(width: 1),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Center(
-                child: Text(
-                  "Rate Us",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            child: GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      contentPadding: EdgeInsets.all(0),
+                      content: feedbackDialog(),
+                    );
+                  },
+                );
+              },
+              child: Container(
+                width: 300,
+                height: 50,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Center(
+                  child: Text(
+                    "Rate Us",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
                 ),
               ),
             ),
           ),
         )
       ],
+    );
+  }
+
+  Widget feedbackDialog() {
+    return Material(
+      elevation: 8,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: 500,
+        height: 600,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            // Chat Header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Feedback",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    context.navigateBack();
+                  },
+                ),
+              ],
+            ),
+            Divider(),
+            const Gap(20),
+            Center(
+              child: SizedBox(
+                height: 40,
+                child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) => IconButton(
+                        onPressed: () {
+                          setState(() {
+                            rates[index] = !rates[index];
+                          });
+                        },
+                        icon: rates[index]
+                            ? const Icon(
+                                Icons.star,
+                                color: kRateColor,
+                              )
+                            : const Icon(Icons.star_border)),
+                    separatorBuilder: (context, index) => const Gap(0),
+                    itemCount: rates.length),
+              ),
+            ),
+            const Gap(20),
+            Divider(),
+            TextField(
+              decoration: InputDecoration(
+                hintText: "What's your name?",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: kFourthColor)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: kFourthColor)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: kFourthColor)),
+              ),
+            ),
+            const Gap(15),
+
+            TextField(
+              // minLines: 2,
+              maxLines: 10,
+              decoration: InputDecoration(
+                hintText: "Type a feed back...",
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: kFourthColor)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: kFourthColor)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: kFourthColor)),
+                // suffixIcon: Icon(Icons.send),
+              ),
+            ),
+            const Gap(30),
+            Center(
+              child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          WidgetStatePropertyAll(kMessageBubbleColor),
+                      foregroundColor: WidgetStatePropertyAll(kFourthColor)),
+                  onPressed: () {},
+                  child: Text("Post")),
+            )
+          ],
+        ),
+      ),
     );
   }
 

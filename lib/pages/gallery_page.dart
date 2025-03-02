@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:shimmer/shimmer.dart';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});
@@ -25,6 +26,30 @@ class _GalleryPageState extends State<GalleryPage> {
         gallerySession(),
         const Gap(120)
       ],
+    );
+  }
+
+  Widget shimmerLoadingForGallery() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 120),
+      child: Shimmer.fromColors(
+        baseColor: Colors.black26,
+        highlightColor: Colors.white,
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            mainAxisSpacing: 50,
+            crossAxisSpacing: 40,
+            mainAxisExtent: MediaQuery.of(context).size.height * 0.5,
+          ),
+          itemBuilder: (context, index) => Container(
+            color: Colors.black26,
+          ),
+          itemCount: 12,
+        ),
+      ),
     );
   }
 
@@ -51,9 +76,7 @@ class _GalleryPageState extends State<GalleryPage> {
             child: BlocBuilder<GalleryBloc, GalleryStates>(
               builder: (context, state) {
                 if (state is GalleryLoading) {
-                  return Center(
-                    child: CupertinoActivityIndicator(),
-                  );
+                  return shimmerLoadingForGallery();
                 } else if (state is GalleryLoaded) {
                   return GridView.builder(
                     shrinkWrap: true,

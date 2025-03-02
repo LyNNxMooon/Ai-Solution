@@ -3,10 +3,11 @@ import 'package:ai_solution/constant/colors.dart';
 import 'package:flutter/material.dart';
 
 class SuccessWidget extends StatelessWidget {
-  const SuccessWidget({super.key, required this.message, required this.function});
+  const SuccessWidget(
+      {super.key, required this.message, required this.function});
 
   final String message;
-    final VoidCallback function;
+  final VoidCallback function;
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +17,11 @@ class SuccessWidget extends StatelessWidget {
             child: TextButton(
               onPressed: function,
               style: const ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(kFourthColor)),
+                  backgroundColor: WidgetStatePropertyAll(
+                      Color.fromARGB(255, 231, 226, 226))),
               child: const Text(
                 "OK",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
             ),
           )
