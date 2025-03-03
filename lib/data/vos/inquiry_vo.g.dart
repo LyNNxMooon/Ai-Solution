@@ -17,7 +17,6 @@ InquiryVO _$InquiryVOFromJson(Map<String, dynamic> json) => InquiryVO(
   jobDetails: json['jobDetails'] as String,
 );
 
-// ignore: unused_element
 Map<String, dynamic> _$InquiryVOToJson(InquiryVO instance) => <String, dynamic>{
   'id': instance.id,
   'firstName': instance.firstName,

@@ -1,23 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: unused_element
-
-part of 'event_vo.dart';
+part of 'rating_vo.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-EventVO _$EventVOFromJson(Map<String, dynamic> json) => EventVO(
+RatingVO _$RatingVOFromJson(Map<String, dynamic> json) => RatingVO(
   id: (json['id'] as num).toInt(),
   name: json['name'] as String,
-  description: json['description'] as String,
-  url: json['url'] as String,
+  rate: (json['rate'] as num).toInt(),
 );
 
-Map<String, dynamic> _$EventVOToJson(EventVO instance) => <String, dynamic>{
+Map<String, dynamic> _$RatingVOToJson(RatingVO instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
-  'description': instance.description,
-  'url': instance.url,
+  'rate': instance.rate,
 };

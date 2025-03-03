@@ -1,5 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: unused_element
+
 part of 'previous_solution_vo.dart';
 
 // **************************************************************************
@@ -15,7 +17,6 @@ PreviousSolutionVO _$PreviousSolutionVOFromJson(Map<String, dynamic> json) =>
       clientID: (json['client_id'] as num).toInt(),
     );
 
-// ignore: unused_element
 Map<String, dynamic> _$PreviousSolutionVOToJson(PreviousSolutionVO instance) =>
     <String, dynamic>{
       'id': instance.id,

@@ -46,6 +46,7 @@ dependencies:
   video_player: ^2.9.3
   youtube_player_iframe: ^5.2.1
   shimmer: ^3.0.0
+  top_snackbar_flutter: ^3.2.0
 
 dev_dependencies:
   flutter_test:
