@@ -4,14 +4,14 @@ import 'package:ai_solution/BLoC/inquiry/inquiry_bloc.dart';
 import 'package:ai_solution/BLoC/inquiry/inquiry_events.dart';
 import 'package:ai_solution/BLoC/inquiry/inquiry_states.dart';
 import 'package:ai_solution/constant/colors.dart';
-import 'package:ai_solution/utils/navigation_extension.dart';
-import 'package:ai_solution/widgets/error_dialog.dart';
-import 'package:ai_solution/widgets/success_dialog.dart';
+
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class FAQPage extends StatefulWidget {
   const FAQPage({super.key});
@@ -201,31 +201,26 @@ class _FAQPageState extends State<FAQPage> {
                     },
                     listener: (context, state) {
                       if (state is InquirySubmitted) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => SuccessWidget(
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.success(
                             message: state.message,
-                            function: () {
-                              _firstNameController.clear();
-                              _lastNameController.clear();
-                              _emailController.clear();
-                              _compnayNameController.clear();
-                              dropdownCallBack(null);
-                              _jobTitleController.clear();
-                              _jobDetailsController.clear();
-
-                              context.navigateBack();
-                            },
                           ),
                         );
+                        _firstNameController.clear();
+                        _lastNameController.clear();
+                        _emailController.clear();
+                        _compnayNameController.clear();
+                        dropdownCallBack(null);
+                        _jobTitleController.clear();
+                        _jobDetailsController.clear();
                       }
 
                       if (state is InquirySubmissionError) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => CustomErrorWidget(
-                            errorMessage: state.message,
-                            function: context.navigateBack,
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.error(
+                            message: state.message,
                           ),
                         );
                       }
