@@ -32,8 +32,9 @@ class CustomTextField extends StatelessWidget {
         keyboardType: keyboardType,
         maxLines: maxLines,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        decoration: InputDecoration(
         
+        decoration: InputDecoration(
+         
           suffixIcon: suffixIcon,
           hintText: hintText,
           labelText: label,

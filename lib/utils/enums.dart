@@ -1,0 +1,4 @@
+enum Validator {
+  email,
+  phone,
+}

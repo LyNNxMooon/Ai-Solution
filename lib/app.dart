@@ -16,7 +16,9 @@ import 'package:ai_solution/data/model/feedback_model.dart';
 import 'package:ai_solution/data/model/gallery_model.dart';
 import 'package:ai_solution/data/model/inquiry_model.dart';
 import 'package:ai_solution/data/model/landing_model.dart';
+import 'package:ai_solution/pages/admin_login_page.dart';
 import 'package:ai_solution/pages/index_page.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +31,22 @@ class MyApp extends StatelessWidget {
   final galleryRepo = GalleryModel();
   final inquiryRepo = InquiryModel();
   final feedbackRepo = FeedbackModel();
+
+  final GoRouter router = GoRouter(routes: [
+    GoRoute(
+      path: '/admin-login',
+      builder: (context, state) {
+        return AdminLoginPage(); 
+      },
+    ),
+
+    GoRoute(
+      path: '/',
+      builder: (context, state) {
+        return IndexPage(); 
+      },
+    ),
+  ]);
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +91,10 @@ class MyApp extends StatelessWidget {
                 FeedbackAndRatingBloc(feedbackRepo: feedbackRepo),
           ),
         ],
-        child: MaterialApp(
+        child: MaterialApp.router(
           theme: ThemeData(fontFamily: "InterTight"),
           debugShowCheckedModeBanner: false,
-          home: IndexPage(),
+          routerConfig: router,
         ));
   }
 }
