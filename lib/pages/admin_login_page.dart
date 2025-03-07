@@ -1,7 +1,14 @@
+import 'package:ai_solution/BLoC/admin_auth/admin_auth_bloc.dart';
+import 'package:ai_solution/BLoC/admin_auth/admin_auth_events.dart';
+import 'package:ai_solution/BLoC/admin_auth/admin_auth_states.dart';
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/utils/enums.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class AdminLoginPage extends StatefulWidget {
   const AdminLoginPage({super.key});
@@ -15,6 +22,15 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
   final _passwordController = TextEditingController();
 
   bool? showPassword = true;
+
+  late final adminAuthBloc = context.read<AdminAuthBloc>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,13 +99,37 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                       showPassword,
                       null),
                   const Gap(50),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(kFourthColor),
-                          foregroundColor:
-                              WidgetStatePropertyAll(Colors.white)),
-                      onPressed: () {},
-                      child: Text("Login"))
+                  BlocConsumer<AdminAuthBloc, AdminAuthStates>(
+                    builder: (context, state) {
+                      if (state is AdminAuthLoading) {
+                        return Center(
+                          child: CupertinoActivityIndicator(),
+                        );
+                      } else {
+                        return ElevatedButton(
+                            style: ButtonStyle(
+                                foregroundColor:
+                                    WidgetStatePropertyAll(Colors.white),
+                                backgroundColor:
+                                    WidgetStatePropertyAll(kFourthColor)),
+                            onPressed: () => adminAuthBloc.add(AdminLogin(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                context: context)),
+                            child: Text("Login"));
+                      }
+                    },
+                    listener: (context, state) {
+                      if (state is UnAuthenticated) {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.error(
+                            message: state.message,
+                          ),
+                        );
+                      }
+                    },
+                  )
                 ],
               ),
             ),
@@ -123,8 +163,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
 
                   case Validator.phone:
                     return (value) => TextFieldValidator.phone(value, context);
-
-                  }
+                }
               }()
             : null,
         decoration: InputDecoration(

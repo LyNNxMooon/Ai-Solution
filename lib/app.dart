@@ -1,3 +1,4 @@
+import 'package:ai_solution/BLoC/admin_auth/admin_auth_bloc.dart';
 import 'package:ai_solution/BLoC/clients/client_bloc.dart';
 import 'package:ai_solution/BLoC/clients/client_events.dart';
 import 'package:ai_solution/BLoC/current_solutions/current_solutions_bloc.dart';
@@ -11,11 +12,13 @@ import 'package:ai_solution/BLoC/inquiry/inquiry_bloc.dart';
 import 'package:ai_solution/BLoC/inquiry/inquiry_events.dart';
 import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_bloc.dart';
 import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_events.dart';
+import 'package:ai_solution/data/model/admin_auth_model.dart';
 import 'package:ai_solution/data/model/events_model.dart';
 import 'package:ai_solution/data/model/feedback_model.dart';
 import 'package:ai_solution/data/model/gallery_model.dart';
 import 'package:ai_solution/data/model/inquiry_model.dart';
 import 'package:ai_solution/data/model/landing_model.dart';
+import 'package:ai_solution/pages/2fa_activation_page.dart';
 import 'package:ai_solution/pages/admin_login_page.dart';
 import 'package:ai_solution/pages/index_page.dart';
 import 'package:go_router/go_router.dart';
@@ -31,12 +34,20 @@ class MyApp extends StatelessWidget {
   final galleryRepo = GalleryModel();
   final inquiryRepo = InquiryModel();
   final feedbackRepo = FeedbackModel();
+  final adminAuthRepo = AdminAuthModel();
 
   final GoRouter router = GoRouter(routes: [
     GoRoute(
       path: '/admin-login',
       builder: (context, state) {
         return AdminLoginPage(); 
+      },
+    ),
+
+     GoRoute(
+      path: '/admin-2fa-activate',
+      builder: (context, state) {
+        return TwoFaActivation(); 
       },
     ),
 
@@ -89,6 +100,10 @@ class MyApp extends StatelessWidget {
           BlocProvider<FeedbackAndRatingBloc>(
             create: (context) =>
                 FeedbackAndRatingBloc(feedbackRepo: feedbackRepo),
+          ),
+           BlocProvider<AdminAuthBloc>(
+            create: (context) =>
+                AdminAuthBloc(adminAuthRepo: adminAuthRepo),
           ),
         ],
         child: MaterialApp.router(
