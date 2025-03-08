@@ -10,6 +10,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:intl_phone_field/country_picker_dialog.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -59,7 +61,7 @@ class _FAQPageState extends State<FAQPage> {
           margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.24),
           padding: EdgeInsets.all(80),
-          height: MediaQuery.of(context).size.height * 1.05,
+          height: MediaQuery.of(context).size.height * 1.13,
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -112,6 +114,21 @@ class _FAQPageState extends State<FAQPage> {
                 height: 60,
                 child: formfield(
                     "Company Name", "Company Name", 1, _compnayNameController),
+              ),
+              const Gap(20),
+
+              IntlPhoneField(
+                pickerDialogStyle: PickerDialogStyle(width: 400, backgroundColor: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Phone Number',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(),
+                  ),
+                ),
+                initialCountryCode: 'IN',
+                onChanged: (phone) {
+                  print(phone.completeNumber);
+                },
               ),
               const Gap(20),
               // SizedBox(
