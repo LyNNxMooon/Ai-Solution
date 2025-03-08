@@ -65,8 +65,7 @@ class _IndexPageState extends State<IndexPage> {
                                 : _currentIndex == 4
                                     ? FAQPage()
                                     : SizedBox(),
-                Center(child: Text("Copyright 2025 - AI-Solution")),
-                const Gap(30)
+                footer(),
               ],
             ),
           ),
@@ -133,6 +132,261 @@ class _IndexPageState extends State<IndexPage> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget footer() {
+    return Container(
+      color: const Color.fromRGBO(34, 34, 34, 1),
+      width: double.infinity,
+      padding: EdgeInsets.only(top: 50, left: 120, right: 120, bottom: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/logo.png",
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "Terms & Conditions",
+                        style: TextStyle(
+                            fontFamily: "KaiseiDecol",
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
+                  const Gap(30),
+                  SizedBox(
+                    width: 350,
+                    child: Text(
+                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(10),
+                  Text(
+                    "Schedule",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white),
+                  ),
+                  const Gap(30),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.timelapse,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "Monday : 9AM - 5PM",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.timelapse,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "Tuesday : 9AM - 5PM",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.timelapse,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "Wednesday : 9AM - 5PM",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.timelapse,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "Thursday : 9AM - 5PM",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.timelapse,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "Friday : 9AM - 5PM",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.timelapse,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "Saturday : 9AM - 1PM",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                 
+                ],
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                const Gap(10),
+                  Text(
+                    "Contact Us",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white),
+                  ),
+                  const Gap(30),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "No. 12 MyayNiGone/ Yangon/ Myanmar",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.phone,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "+855 69 330 432",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.email_outlined,
+                        color: Colors.white,
+                      ),
+                      const Gap(15),
+                      Text(
+                        "info@aisolution.com",
+                        style: TextStyle(color: Colors.white, fontSize: 13),
+                      )
+                    ],
+                  ),
+                  
+              ],),
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/facebook.png",
+                        width: 30,
+                        height: 30,
+                      ),
+                      const Gap(30),
+                      Image.asset(
+                        "assets/images/instagram.png",
+                        width: 30,
+                        height: 30,
+                      ),
+                      const Gap(30),
+                      Image.asset(
+                        "assets/images/linkedin.png",
+                        width: 30,
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                  const Gap(30),
+                  Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/youtube.png",
+                        width: 30,
+                        height: 30,
+                      ),
+                      const Gap(30),
+                      Image.asset(
+                        "assets/images/discord.png",
+                        width: 30,
+                        height: 30,
+                      ),
+                      const Gap(30),
+                      Image.asset(
+                        "assets/images/twitter.png",
+                        width: 30,
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
+          const Gap(120),
+          Center(
+              child: Text(
+            "Copyright 2025 - AI-Solution",
+            style: TextStyle(color: Colors.white),
+          )),
         ],
       ),
     );
