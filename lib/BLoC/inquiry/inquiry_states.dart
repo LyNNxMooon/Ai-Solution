@@ -18,6 +18,32 @@ class CountryLoaded extends CountryStates {
   CountryLoaded(this.countries);
 }
 
+
+abstract class ServiceStates {}
+
+class ServiceInitial extends ServiceStates {}
+
+class ServiceLoading extends ServiceStates {}
+
+class ServiceError extends ServiceStates {
+  final String message;
+
+  ServiceError(this.message);
+}
+
+class ServiceLoaded extends ServiceStates {
+  final List<DropdownMenuItem<String>> services;
+
+  ServiceLoaded(this.services);
+}
+
+class ServicesLoadedByAdmin extends ServiceStates {
+  final List<String> services;
+
+
+  ServicesLoadedByAdmin(this.services);
+}
+
 abstract class InquirySubmissionStates {}
 
 class InquirySubmissionInitial extends InquirySubmissionStates {}

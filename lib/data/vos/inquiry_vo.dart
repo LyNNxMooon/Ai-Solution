@@ -8,6 +8,7 @@ class InquiryVO {
   final String lastName;
   final String emailAddress;
   final String companyName;
+  final String service;
   final String country;
   final String jobTitle;
   final String jobDetails;
@@ -18,6 +19,7 @@ class InquiryVO {
       required this.lastName,
       required this.emailAddress,
       required this.companyName,
+      required this.service,
       required this.country,
       required this.jobTitle,
       required this.jobDetails});

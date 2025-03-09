@@ -18,8 +18,8 @@ import 'package:ai_solution/data/model/feedback_model.dart';
 import 'package:ai_solution/data/model/gallery_model.dart';
 import 'package:ai_solution/data/model/inquiry_model.dart';
 import 'package:ai_solution/data/model/landing_model.dart';
-import 'package:ai_solution/pages/2fa_activation_page.dart';
-import 'package:ai_solution/pages/admin_login_page.dart';
+
+import 'package:ai_solution/pages/admin/admin_panel.dart';
 import 'package:ai_solution/pages/index_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,14 +40,7 @@ class MyApp extends StatelessWidget {
     GoRoute(
       path: '/admin-login',
       builder: (context, state) {
-        return AdminLoginPage(); 
-      },
-    ),
-
-     GoRoute(
-      path: '/admin-2fa-activate',
-      builder: (context, state) {
-        return TwoFaActivation(); 
+        return AdminPanel(); 
       },
     ),
 
@@ -92,6 +85,10 @@ class MyApp extends StatelessWidget {
           BlocProvider<CountryBloc>(
             create: (context) =>
                 CountryBloc(inquiryRepo: inquiryRepo)..add(FetchCountry()),
+          ),
+           BlocProvider<SerivceBloc>(
+            create: (context) =>
+                SerivceBloc(inquiryRepo: inquiryRepo)..add(FetchServices()),
           ),
           BlocProvider<InquirySubmissionBloc>(
             create: (context) =>

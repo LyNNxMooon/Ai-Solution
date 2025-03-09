@@ -1,5 +1,6 @@
 import 'package:ai_solution/data/vos/country_vo.dart';
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
+import 'package:ai_solution/data/vos/services_vo.dart';
 import 'package:ai_solution/domain/inquiry_repo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -30,6 +31,19 @@ class FirebaseInquiryRepo implements InquiryRepo {
     } on FirebaseException catch (error) {
       //print(error);
       return Future.error(error);
+    }
+  }
+
+  @override
+  Future<List<ServicesVO>> fetchAllServices() async {
+   try {
+      final snapshot = await databaseRef.child("services").once();
+      return snapshot.snapshot.children.map<ServicesVO>((snapshot) {
+        return ServicesVO.fromJson(
+            Map<String, dynamic>.from(snapshot.value as Map));
+      }).toList();
+    } catch (error) {
+      throw Exception("Error fetching services: $error");
     }
   }
 }

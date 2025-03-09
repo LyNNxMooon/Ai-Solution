@@ -2,6 +2,7 @@ import 'package:ai_solution/BLoC/inquiry/inquiry_events.dart';
 import 'package:ai_solution/BLoC/inquiry/inquiry_states.dart';
 import 'package:ai_solution/data/vos/country_vo.dart';
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
+import 'package:ai_solution/data/vos/services_vo.dart';
 import 'package:ai_solution/domain/inquiry_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +33,55 @@ class CountryBloc extends Bloc<CountryEvents, CountryStates> {
       emit(CountryLoaded(dropdownItems));
     } catch (error) {
       emit(CountryError('$error'));
+    }
+  }
+}
+
+class SerivceBloc extends Bloc<ServiceEvents, ServiceStates> {
+  final InquiryRepo inquiryRepo;
+
+  SerivceBloc({required this.inquiryRepo}) : super(ServiceInitial()) {
+    on<FetchServices>(_onFetchServices);
+
+    on<FetchServicesByAdmin>(_onFetchServicesByAdmin);
+  }
+
+  Future _onFetchServicesByAdmin(
+      FetchServicesByAdmin event, Emitter<ServiceStates> emit) async {
+    try {
+      emit(ServiceLoading());
+      final fetchedServices = await inquiryRepo.fetchAllServices();
+
+      final serviceNames = <String>[];
+      for (ServicesVO service in fetchedServices) {
+        serviceNames.add(service.name);
+      }
+
+      emit(ServicesLoadedByAdmin(serviceNames));
+    } catch (error) {
+      emit(ServiceError('$error'));
+    }
+  }
+
+  Future _onFetchServices(
+      FetchServices event, Emitter<ServiceStates> emit) async {
+    try {
+      emit(ServiceLoading());
+      final fetchedServices = await inquiryRepo.fetchAllServices();
+
+      final serviceNames = <String>[];
+      for (ServicesVO service in fetchedServices) {
+        serviceNames.add(service.name);
+      }
+      final dropdownItems = serviceNames.map((String service) {
+        return DropdownMenuItem<String>(
+          value: service,
+          child: Text(service),
+        );
+      }).toList();
+      emit(ServiceLoaded(dropdownItems));
+    } catch (error) {
+      emit(ServiceError('$error'));
     }
   }
 }
@@ -68,6 +118,7 @@ class InquirySubmissionBloc
             emailAddress: event.emailAddress,
             companyName: event.companyName,
             country: event.country,
+            service: event.service,
             jobTitle: event.jobTitle,
             jobDetails: event.jobDetails);
         await inquiryRepo.submitInquiry(inquiryForm).then(

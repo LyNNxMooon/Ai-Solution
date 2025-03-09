@@ -24,10 +24,17 @@ class FAQPage extends StatefulWidget {
 
 class _FAQPageState extends State<FAQPage> {
   String? _dropdownCountryValue;
+  String? _dropdownServiceValue;
 
   void dropdownCallBack(String? selectedValue) {
     setState(() {
       _dropdownCountryValue = selectedValue;
+    });
+  }
+
+  void dropdownServiceCallBack(String? selectedValue) {
+    setState(() {
+      _dropdownServiceValue = selectedValue;
     });
   }
 
@@ -61,7 +68,7 @@ class _FAQPageState extends State<FAQPage> {
           margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.24),
           padding: EdgeInsets.all(80),
-          height: MediaQuery.of(context).size.height * 1.13,
+          height: MediaQuery.of(context).size.height * 1.22,
           decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
@@ -118,7 +125,8 @@ class _FAQPageState extends State<FAQPage> {
               const Gap(20),
 
               IntlPhoneField(
-                pickerDialogStyle: PickerDialogStyle(width: 400, backgroundColor: Colors.white),
+                pickerDialogStyle: PickerDialogStyle(
+                    width: 400, backgroundColor: Colors.white),
                 decoration: InputDecoration(
                   labelText: 'Phone Number',
                   border: OutlineInputBorder(
@@ -176,6 +184,47 @@ class _FAQPageState extends State<FAQPage> {
                     },
                   )),
               const Gap(30),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 1),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  height: 50,
+                  child: BlocBuilder<SerivceBloc, ServiceStates>(
+                    builder: (context, state) {
+                      if (state is ServiceLoaded) {
+                        //_dropdownCountryValue = state.countries[0].value;
+                        return DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            
+                            hint: Text(
+                              "Choose Service",
+                              style: TextStyle(color: kFourthColor),
+                            ),
+                            value: _dropdownServiceValue,
+                            items: state.services,
+                            onChanged: (value) => dropdownServiceCallBack(value),
+                            isExpanded: true,
+                            style: TextStyle(color: kFourthColor),
+                            dropdownColor: Colors.white,
+                          ),
+                        );
+                      } else {
+                        return DropdownButtonHideUnderline(
+                          child: DropdownButton(
+                            //value: _dropdownCountryValue,
+                            items: null,
+                            onChanged: null,
+                            isExpanded: true,
+                            style: TextStyle(color: kFourthColor),
+                            dropdownColor: Colors.white,
+                          ),
+                        );
+                      }
+                    },
+                  )),
+              const Gap(30),
               SizedBox(
                 width: double.infinity,
                 height: 60,
@@ -211,6 +260,7 @@ class _FAQPageState extends State<FAQPage> {
                                     companyName: _compnayNameController.text,
                                     emailAddress: _emailController.text,
                                     country: _dropdownCountryValue ?? "",
+                                    service: _dropdownServiceValue?? "",
                                     jobTitle: _jobTitleController.text,
                                     jobDetails: _jobDetailsController.text)),
                             child: Text("Submitt"));
@@ -229,6 +279,7 @@ class _FAQPageState extends State<FAQPage> {
                         _emailController.clear();
                         _compnayNameController.clear();
                         dropdownCallBack(null);
+                        dropdownServiceCallBack(null);
                         _jobTitleController.clear();
                         _jobDetailsController.clear();
                       }
