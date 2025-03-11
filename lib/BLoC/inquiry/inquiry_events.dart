@@ -14,6 +14,7 @@ class SubmitInquiry extends InquiryEvents {
   final String firstName;
   final String lastName;
   final String emailAddress;
+  final String phone;
   final String companyName;
   final String service;
   final String country;
@@ -26,7 +27,12 @@ class SubmitInquiry extends InquiryEvents {
       required this.companyName,
       required this.service,
       required this.emailAddress,
+      required this.phone,
       required this.country,
       required this.jobTitle,
       required this.jobDetails});
 }
+
+class FetchOpenedInquiresByAdmin extends InquiryEvents {}
+
+class FetchClosedInquiresByAdmin extends InquiryEvents {}

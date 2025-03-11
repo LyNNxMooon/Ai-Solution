@@ -13,6 +13,7 @@ import 'package:ai_solution/BLoC/inquiry/inquiry_events.dart';
 import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_bloc.dart';
 import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_events.dart';
 import 'package:ai_solution/data/model/admin_auth_model.dart';
+import 'package:ai_solution/data/model/admin_model.dart';
 import 'package:ai_solution/data/model/events_model.dart';
 import 'package:ai_solution/data/model/feedback_model.dart';
 import 'package:ai_solution/data/model/gallery_model.dart';
@@ -35,19 +36,19 @@ class MyApp extends StatelessWidget {
   final inquiryRepo = InquiryModel();
   final feedbackRepo = FeedbackModel();
   final adminAuthRepo = AdminAuthModel();
+  final adminRepo = AdminModel();
 
   final GoRouter router = GoRouter(routes: [
     GoRoute(
       path: '/admin-login',
       builder: (context, state) {
-        return AdminPanel(); 
+        return AdminPanel();
       },
     ),
-
     GoRoute(
       path: '/',
       builder: (context, state) {
-        return IndexPage(); 
+        return IndexPage();
       },
     ),
   ]);
@@ -86,7 +87,7 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 CountryBloc(inquiryRepo: inquiryRepo)..add(FetchCountry()),
           ),
-           BlocProvider<SerivceBloc>(
+          BlocProvider<SerivceBloc>(
             create: (context) =>
                 SerivceBloc(inquiryRepo: inquiryRepo)..add(FetchServices()),
           ),
@@ -98,9 +99,16 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 FeedbackAndRatingBloc(feedbackRepo: feedbackRepo),
           ),
-           BlocProvider<AdminAuthBloc>(
-            create: (context) =>
-                AdminAuthBloc(adminAuthRepo: adminAuthRepo),
+          BlocProvider<AdminAuthBloc>(
+            create: (context) => AdminAuthBloc(adminAuthRepo: adminAuthRepo),
+          ),
+          BlocProvider<InquiryBloc>(
+            create: (context) {
+              final inquiryBloc = InquiryBloc(adminRepo: adminRepo);
+              inquiryBloc.add(FetchOpenedInquiresByAdmin());
+              inquiryBloc.add(FetchClosedInquiresByAdmin());
+              return inquiryBloc;
+            },
           ),
         ],
         child: MaterialApp.router(

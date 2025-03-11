@@ -3,6 +3,7 @@ import 'package:ai_solution/BLoC/inquiry/inquiry_states.dart';
 import 'package:ai_solution/data/vos/country_vo.dart';
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
 import 'package:ai_solution/data/vos/services_vo.dart';
+import 'package:ai_solution/domain/admin_repo.dart';
 import 'package:ai_solution/domain/inquiry_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -105,6 +106,8 @@ class InquirySubmissionBloc
           event.companyName.isEmpty ||
           event.country.isEmpty ||
           event.emailAddress.isEmpty ||
+          event.service.isEmpty ||
+          event.phone.isEmpty ||
           event.jobTitle.isEmpty ||
           event.jobDetails.isEmpty) {
         emit(
@@ -116,7 +119,9 @@ class InquirySubmissionBloc
             firstName: event.firstName,
             lastName: event.lastName,
             emailAddress: event.emailAddress,
+            phone: event.phone,
             companyName: event.companyName,
+            isOpened: true,
             country: event.country,
             service: event.service,
             jobTitle: event.jobTitle,
@@ -129,6 +134,40 @@ class InquirySubmissionBloc
       }
     } catch (error) {
       emit(InquirySubmissionError('$error'));
+    }
+  }
+}
+
+class InquiryBloc extends Bloc<InquiryEvents, InquiryStates> {
+  final AdminRepo adminRepo;
+
+  InquiryBloc({required this.adminRepo}) : super(InquiryInitial()) {
+    on<FetchOpenedInquiresByAdmin>(_onFetchOpenedInquiresByAdmin);
+
+    on<FetchClosedInquiresByAdmin>(_onFetchClosedInquiresByAdmin);
+  }
+
+  Future _onFetchOpenedInquiresByAdmin(
+      FetchOpenedInquiresByAdmin event, Emitter<InquiryStates> emit) async {
+    try {
+      emit(InquiryLoading());
+      final fetchedOpenedInquires = await adminRepo.fetchAllOpenedInquiries();
+
+      emit(OpenedInquiriesLoaded(fetchedOpenedInquires));
+    } catch (error) {
+      emit(OpenedInquiryError('$error'));
+    }
+  }
+
+  Future _onFetchClosedInquiresByAdmin(
+      FetchClosedInquiresByAdmin event, Emitter<InquiryStates> emit) async {
+    try {
+      emit(InquiryLoading());
+      final fetchedClosedInquires = await adminRepo.fetchAllClosedInquires();
+
+      emit(ClosedInquiriesLoaded(fetchedClosedInquires));
+    } catch (error) {
+      emit(ClosedInquiryError('$error'));
     }
   }
 }

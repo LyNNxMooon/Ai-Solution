@@ -11,11 +11,13 @@ InquiryVO _$InquiryVOFromJson(Map<String, dynamic> json) => InquiryVO(
   firstName: json['firstName'] as String,
   lastName: json['lastName'] as String,
   emailAddress: json['emailAddress'] as String,
+  phone: json['phone'] as String,
   companyName: json['companyName'] as String,
   service: json['service'] as String,
   country: json['country'] as String,
   jobTitle: json['jobTitle'] as String,
   jobDetails: json['jobDetails'] as String,
+  isOpened: json['isOpened'] as bool,
 );
 
 Map<String, dynamic> _$InquiryVOToJson(InquiryVO instance) => <String, dynamic>{
@@ -23,9 +25,11 @@ Map<String, dynamic> _$InquiryVOToJson(InquiryVO instance) => <String, dynamic>{
   'firstName': instance.firstName,
   'lastName': instance.lastName,
   'emailAddress': instance.emailAddress,
+  'phone': instance.phone,
   'companyName': instance.companyName,
   'service': instance.service,
   'country': instance.country,
   'jobTitle': instance.jobTitle,
   'jobDetails': instance.jobDetails,
+  'isOpened': instance.isOpened,
 };

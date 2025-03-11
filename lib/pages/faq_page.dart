@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, prefer_final_fields
 
 import 'package:ai_solution/BLoC/inquiry/inquiry_bloc.dart';
 import 'package:ai_solution/BLoC/inquiry/inquiry_events.dart';
@@ -46,6 +46,9 @@ class _FAQPageState extends State<FAQPage> {
   final _compnayNameController = TextEditingController();
   final _jobTitleController = TextEditingController();
   final _jobDetailsController = TextEditingController();
+  final _phoneController = TextEditingController();
+
+  //String _phoneNumber = "";
 
   @override
   void dispose() {
@@ -55,6 +58,7 @@ class _FAQPageState extends State<FAQPage> {
     _compnayNameController.dispose();
     _jobDetailsController.dispose();
     _jobDetailsController.dispose();
+    _phoneController.dispose();
     super.dispose();
   }
 
@@ -125,6 +129,7 @@ class _FAQPageState extends State<FAQPage> {
               const Gap(20),
 
               IntlPhoneField(
+                controller: _phoneController,
                 pickerDialogStyle: PickerDialogStyle(
                     width: 400, backgroundColor: Colors.white),
                 decoration: InputDecoration(
@@ -134,9 +139,9 @@ class _FAQPageState extends State<FAQPage> {
                   ),
                 ),
                 initialCountryCode: 'IN',
-                onChanged: (phone) {
-                  print(phone.completeNumber);
-                },
+                // onChanged: (phone) {
+                //   _phoneNumber = phone.completeNumber;
+                // },
               ),
               const Gap(20),
               // SizedBox(
@@ -197,14 +202,14 @@ class _FAQPageState extends State<FAQPage> {
                         //_dropdownCountryValue = state.countries[0].value;
                         return DropdownButtonHideUnderline(
                           child: DropdownButton(
-                            
                             hint: Text(
                               "Choose Service",
                               style: TextStyle(color: kFourthColor),
                             ),
                             value: _dropdownServiceValue,
                             items: state.services,
-                            onChanged: (value) => dropdownServiceCallBack(value),
+                            onChanged: (value) =>
+                                dropdownServiceCallBack(value),
                             isExpanded: true,
                             style: TextStyle(color: kFourthColor),
                             dropdownColor: Colors.white,
@@ -259,8 +264,9 @@ class _FAQPageState extends State<FAQPage> {
                                     lastName: _lastNameController.text,
                                     companyName: _compnayNameController.text,
                                     emailAddress: _emailController.text,
+                                    phone: _phoneController.text,
                                     country: _dropdownCountryValue ?? "",
-                                    service: _dropdownServiceValue?? "",
+                                    service: _dropdownServiceValue ?? "",
                                     jobTitle: _jobTitleController.text,
                                     jobDetails: _jobDetailsController.text)),
                             child: Text("Submitt"));
@@ -278,6 +284,7 @@ class _FAQPageState extends State<FAQPage> {
                         _lastNameController.clear();
                         _emailController.clear();
                         _compnayNameController.clear();
+                        _phoneController.clear();
                         dropdownCallBack(null);
                         dropdownServiceCallBack(null);
                         _jobTitleController.clear();
