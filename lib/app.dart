@@ -102,13 +102,13 @@ class MyApp extends StatelessWidget {
           BlocProvider<AdminAuthBloc>(
             create: (context) => AdminAuthBloc(adminAuthRepo: adminAuthRepo),
           ),
-          BlocProvider<InquiryBloc>(
-            create: (context) {
-              final inquiryBloc = InquiryBloc(adminRepo: adminRepo);
-              inquiryBloc.add(FetchOpenedInquiresByAdmin());
-              inquiryBloc.add(FetchClosedInquiresByAdmin());
-              return inquiryBloc;
-            },
+          BlocProvider<OpenInquiryBloc>(
+            create: (context) => OpenInquiryBloc(adminRepo: adminRepo)
+              ..add(FetchOpenedInquiresByAdmin()),
+          ),
+          BlocProvider<ClosedInquiryBloc>(
+            create: (context) => ClosedInquiryBloc(adminRepo: adminRepo)
+              ..add(FetchClosedInquiresByAdmin()),
           ),
         ],
         child: MaterialApp.router(

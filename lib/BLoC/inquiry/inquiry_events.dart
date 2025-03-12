@@ -35,4 +35,4 @@ class SubmitInquiry extends InquiryEvents {
 
 class FetchOpenedInquiresByAdmin extends InquiryEvents {}
 
-class FetchClosedInquiresByAdmin extends InquiryEvents {}
+class FetchClosedInquiresByAdmin extends InquiryEvents {} 

@@ -61,31 +61,37 @@ class InquirySubmissionError extends InquirySubmissionStates {
   InquirySubmissionError(this.message);
 }
 
-abstract class InquiryStates {}
+abstract class OpenInquiryStates {}
 
-class InquiryInitial extends InquiryStates {}
+class OpenInquiryInitial extends OpenInquiryStates {}
 
-class InquiryLoading extends InquiryStates {}
+class OpenInquiryLoading extends OpenInquiryStates {}
 
-class OpenedInquiryError extends InquiryStates {
+class OpenedInquiryError extends OpenInquiryStates {
   final String message;
 
   OpenedInquiryError(this.message);
 }
 
-class ClosedInquiryError extends InquiryStates {
-  final String message;
-
-  ClosedInquiryError(this.message);
-}
-
-class OpenedInquiriesLoaded extends InquiryStates {
+class OpenedInquiriesLoaded extends OpenInquiryStates {
   final List<InquiryVO> openedInquiries;
 
   OpenedInquiriesLoaded(this.openedInquiries);
 }
 
-class ClosedInquiriesLoaded extends InquiryStates {
+abstract class ClosedInquiryStates {}
+
+class ClosedInquiryInitial extends ClosedInquiryStates {}
+
+class ClosedInquiryLoading extends ClosedInquiryStates {}
+
+class ClosedInquiryError extends ClosedInquiryStates {
+  final String message;
+
+  ClosedInquiryError(this.message);
+}
+
+class ClosedInquiriesLoaded extends ClosedInquiryStates {
   final List<InquiryVO> closedInquires;
 
   ClosedInquiriesLoaded(this.closedInquires);

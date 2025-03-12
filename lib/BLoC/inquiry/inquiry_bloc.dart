@@ -138,19 +138,17 @@ class InquirySubmissionBloc
   }
 }
 
-class InquiryBloc extends Bloc<InquiryEvents, InquiryStates> {
+class OpenInquiryBloc extends Bloc<InquiryEvents, OpenInquiryStates> {
   final AdminRepo adminRepo;
 
-  InquiryBloc({required this.adminRepo}) : super(InquiryInitial()) {
+  OpenInquiryBloc({required this.adminRepo}) : super(OpenInquiryInitial()) {
     on<FetchOpenedInquiresByAdmin>(_onFetchOpenedInquiresByAdmin);
-
-    on<FetchClosedInquiresByAdmin>(_onFetchClosedInquiresByAdmin);
   }
 
   Future _onFetchOpenedInquiresByAdmin(
-      FetchOpenedInquiresByAdmin event, Emitter<InquiryStates> emit) async {
+      FetchOpenedInquiresByAdmin event, Emitter<OpenInquiryStates> emit) async {
     try {
-      emit(InquiryLoading());
+      emit(OpenInquiryLoading());
       final fetchedOpenedInquires = await adminRepo.fetchAllOpenedInquiries();
 
       emit(OpenedInquiriesLoaded(fetchedOpenedInquires));
@@ -158,11 +156,19 @@ class InquiryBloc extends Bloc<InquiryEvents, InquiryStates> {
       emit(OpenedInquiryError('$error'));
     }
   }
+}
 
-  Future _onFetchClosedInquiresByAdmin(
-      FetchClosedInquiresByAdmin event, Emitter<InquiryStates> emit) async {
+class ClosedInquiryBloc extends Bloc<InquiryEvents, ClosedInquiryStates> {
+  final AdminRepo adminRepo;
+
+  ClosedInquiryBloc({required this.adminRepo}) : super(ClosedInquiryInitial()) {
+    on<FetchClosedInquiresByAdmin>(_onFetchClosedInquiresByAdmin);
+  }
+
+  Future _onFetchClosedInquiresByAdmin(FetchClosedInquiresByAdmin event,
+      Emitter<ClosedInquiryStates> emit) async {
     try {
-      emit(InquiryLoading());
+      emit(ClosedInquiryLoading());
       final fetchedClosedInquires = await adminRepo.fetchAllClosedInquires();
 
       emit(ClosedInquiriesLoaded(fetchedClosedInquires));
