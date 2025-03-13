@@ -38,13 +38,15 @@ class FetchOpenedInquiresByAdmin extends InquiryEvents {}
 class FetchClosedInquiresByAdmin extends InquiryEvents {}
 
 class FilterOpenedInquiriesByAdmin extends InquiryEvents {
-  final String service;
+  final String keyword;
+  final bool isSearch;
 
-  FilterOpenedInquiriesByAdmin({required this.service});
+  FilterOpenedInquiriesByAdmin({required this.keyword, required this.isSearch});
 }
 
 class FilterClosedInquiriesByAdmin extends InquiryEvents {
-  final String service;
+  final String keyword;
+  final bool isSearch;
 
-  FilterClosedInquiriesByAdmin({required this.service});
+  FilterClosedInquiriesByAdmin({required this.keyword, required this.isSearch});
 }

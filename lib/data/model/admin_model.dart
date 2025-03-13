@@ -45,25 +45,38 @@ class AdminModel implements AdminRepo {
   }
 
   @override
-  Future<List<InquiryVO>> filterClosedInquires(String service) async {
+  Future<List<InquiryVO>> filterClosedInquires(
+      String keyword, bool isSearch) async {
     try {
       List<InquiryVO> rawList = <InquiryVO>[];
-      rawList = await _firebaseAgent.filterClosedInquires(service);
+      rawList = await _firebaseAgent.filterClosedInquires(keyword, isSearch);
 
       List<InquiryVO> closedList = <InquiryVO>[];
 
-      if (service == "All") {
+      if (isSearch) {
         closedList = rawList
             .where(
-              (element) => !element.isOpened,
+              (element) =>
+                  !element.isOpened &&
+                  element.emailAddress
+                      .toLowerCase()
+                      .contains(keyword.toLowerCase()),
             )
             .toList();
       } else {
-        closedList = rawList
-            .where(
-              (element) => !element.isOpened && element.service == service,
-            )
-            .toList();
+        if (keyword == "All") {
+          closedList = rawList
+              .where(
+                (element) => !element.isOpened,
+              )
+              .toList();
+        } else {
+          closedList = rawList
+              .where(
+                (element) => !element.isOpened && element.service == keyword,
+              )
+              .toList();
+        }
       }
 
       return closedList;
@@ -73,25 +86,38 @@ class AdminModel implements AdminRepo {
   }
 
   @override
-  Future<List<InquiryVO>> filterOpenedInquires(String service) async {
+  Future<List<InquiryVO>> filterOpenedInquires(
+      String keyword, bool isSearch) async {
     try {
       List<InquiryVO> rawList = <InquiryVO>[];
-      rawList = await _firebaseAgent.fetchAllOpenedInquiries();
+      rawList = await _firebaseAgent.filterOpenedInquires(keyword, isSearch);
 
       List<InquiryVO> openedList = <InquiryVO>[];
 
-      if (service == "All") {
+      if (isSearch) {
         openedList = rawList
             .where(
-              (element) => element.isOpened,
+              (element) =>
+                  element.isOpened &&
+                  element.emailAddress
+                      .toLowerCase()
+                      .contains(keyword.toLowerCase()),
             )
             .toList();
       } else {
-        openedList = rawList
-            .where(
-              (element) => element.isOpened && element.service == service,
-            )
-            .toList();
+        if (keyword == "All") {
+          openedList = rawList
+              .where(
+                (element) => element.isOpened,
+              )
+              .toList();
+        } else {
+          openedList = rawList
+              .where(
+                (element) => element.isOpened && element.service == keyword,
+              )
+              .toList();
+        }
       }
 
       return openedList;

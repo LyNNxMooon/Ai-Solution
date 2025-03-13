@@ -58,6 +58,17 @@ class _InquiryPanelState extends State<InquiryPanel> {
                     itemSize: 16,
                     placeholder: "Search by email",
                     style: TextStyle(fontSize: 13, color: Colors.white),
+                    onSubmitted: (value) {
+                      setState(() {
+                        openedInquiry = null;
+                        closedInquiry = null;
+                      });
+                      isOpenTapped
+                          ? openedInquiryBloc.add(FilterOpenedInquiriesByAdmin(
+                              keyword: value, isSearch: true))
+                          : closedInquiryBloc.add(FilterClosedInquiriesByAdmin(
+                              keyword: value, isSearch: true));
+                    },
                   )),
               const Gap(20),
               Text(
@@ -99,9 +110,11 @@ class _InquiryPanelState extends State<InquiryPanel> {
                         });
                         isOpenTapped
                             ? openedInquiryBloc.add(
-                                FilterOpenedInquiriesByAdmin(service: value))
+                                FilterOpenedInquiriesByAdmin(
+                                    keyword: value, isSearch: false))
                             : closedInquiryBloc.add(
-                                FilterClosedInquiriesByAdmin(service: value));
+                                FilterClosedInquiriesByAdmin(
+                                    keyword: value, isSearch: false));
                       },
                       itemBuilder: (BuildContext context) {
                         return state.services.map((String item) {

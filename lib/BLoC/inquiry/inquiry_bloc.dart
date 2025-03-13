@@ -163,7 +163,7 @@ class OpenInquiryBloc extends Bloc<InquiryEvents, OpenInquiryStates> {
     try {
       emit(OpenInquiryLoading());
       final filteredOpenedInquiriesByAdmin =
-          await adminRepo.filterOpenedInquires(event.service);
+          await adminRepo.filterOpenedInquires(event.keyword, event.isSearch);
 
       emit(OpenedInquiriesLoaded(filteredOpenedInquiriesByAdmin));
     } catch (error) {
@@ -197,7 +197,7 @@ class ClosedInquiryBloc extends Bloc<InquiryEvents, ClosedInquiryStates> {
     try {
       emit(ClosedInquiryLoading());
       final filteredClosedInquiriesByAdmin =
-          await adminRepo.filterClosedInquires(event.service);
+          await adminRepo.filterClosedInquires(event.keyword, event.isSearch);
 
       emit(ClosedInquiriesLoaded(filteredClosedInquiriesByAdmin));
     } catch (error) {

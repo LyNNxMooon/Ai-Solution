@@ -32,7 +32,7 @@ class FirebaseAdminRepo implements AdminRepo {
   }
 
   @override
-  Future<List<InquiryVO>> filterClosedInquires(String service) async {
+  Future<List<InquiryVO>> filterClosedInquires(String keyword, bool isSearch) async {
     try {
       final snapshot = await databaseRef.child("inquries").once();
       return snapshot.snapshot.children.map<InquiryVO>((snapshot) {
@@ -45,7 +45,7 @@ class FirebaseAdminRepo implements AdminRepo {
   }
 
   @override
-  Future<List<InquiryVO>> filterOpenedInquires(String service) async {
+  Future<List<InquiryVO>> filterOpenedInquires(String keyword, bool isSearch) async {
     try {
       final snapshot = await databaseRef.child("inquries").once();
       return snapshot.snapshot.children.map<InquiryVO>((snapshot) {
