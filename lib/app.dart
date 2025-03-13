@@ -110,6 +110,9 @@ class MyApp extends StatelessWidget {
             create: (context) => ClosedInquiryBloc(adminRepo: adminRepo)
               ..add(FetchClosedInquiresByAdmin()),
           ),
+          BlocProvider<UpdateInquiryBloc>(
+            create: (context) => UpdateInquiryBloc(adminRepo: adminRepo),
+          ),
         ],
         child: MaterialApp.router(
           theme: ThemeData(fontFamily: "InterTight"),

@@ -1,3 +1,5 @@
+import 'package:ai_solution/data/vos/inquiry_vo.dart';
+
 abstract class CountryEvents {}
 
 class FetchCountry extends CountryEvents {}
@@ -49,4 +51,10 @@ class FilterClosedInquiriesByAdmin extends InquiryEvents {
   final bool isSearch;
 
   FilterClosedInquiriesByAdmin({required this.keyword, required this.isSearch});
+}
+
+class UpdateInquiry extends InquiryEvents {
+  final InquiryVO inquiry;
+
+  UpdateInquiry({required this.inquiry});
 }

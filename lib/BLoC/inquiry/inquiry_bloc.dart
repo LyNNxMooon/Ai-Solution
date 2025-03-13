@@ -205,3 +205,25 @@ class ClosedInquiryBloc extends Bloc<InquiryEvents, ClosedInquiryStates> {
     }
   }
 }
+
+class UpdateInquiryBloc extends Bloc<InquiryEvents, InquiryUpdateStates> {
+  final AdminRepo adminRepo;
+
+  UpdateInquiryBloc({required this.adminRepo}) : super(InquiryUpdateInitial()) {
+    on<UpdateInquiry>(_onUpdateInquiry);
+  }
+
+  Future _onUpdateInquiry(
+      UpdateInquiry event, Emitter<InquiryUpdateStates> emit) async {
+    try {
+      emit(InquiryUpdateLoading());
+      await adminRepo.updateInquiry(event.inquiry).then(
+        (value) {
+          emit(InquiryUpdated("Inquiry  Status Updated!"));
+        },
+      );
+    } catch (error) {
+      emit(InquiryUpdateError('$error'));
+    }
+  }
+}

@@ -13,7 +13,7 @@ class InquiryVO {
   final String country;
   final String jobTitle;
   final String jobDetails;
-  final bool isOpened;
+  bool isOpened;
 
   InquiryVO(
       {required this.id,

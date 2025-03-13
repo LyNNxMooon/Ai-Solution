@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class InquiryPanel extends StatefulWidget {
   const InquiryPanel({super.key});
@@ -25,6 +27,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
 
   late final openedInquiryBloc = context.read<OpenInquiryBloc>();
   late final closedInquiryBloc = context.read<ClosedInquiryBloc>();
+  late final inquiryUpdateBloc = context.read<UpdateInquiryBloc>();
 
   InquiryVO? openedInquiry;
 
@@ -132,84 +135,8 @@ class _InquiryPanelState extends State<InquiryPanel> {
               ),
               const Gap(40),
               isOpenTapped
-                  ? GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        width: 160,
-                        height: 30,
-                        color: const Color.fromARGB(255, 64, 64, 64),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.check,
-                              color: kPrimaryColor,
-                              size: 20,
-                            ),
-                            const Gap(10),
-                            Text(
-                              "Close Inquiry",
-                              style:
-                                  TextStyle(color: kPrimaryColor, fontSize: 13),
-                            ),
-                            const Gap(10)
-                          ],
-                        ),
-                      ),
-                    )
-                  : Row(children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: 160,
-                          height: 30,
-                          color: const Color.fromARGB(255, 64, 64, 64),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.restore,
-                                color: kPrimaryColor,
-                                size: 20,
-                              ),
-                              const Gap(10),
-                              Text(
-                                "Open Inquiry",
-                                style: TextStyle(
-                                    color: kPrimaryColor, fontSize: 13),
-                              ),
-                              const Gap(10)
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Gap(20),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: 160,
-                          height: 30,
-                          color: const Color.fromARGB(255, 64, 64, 64),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.delete,
-                                color: kPrimaryColor,
-                                size: 20,
-                              ),
-                              const Gap(10),
-                              Text(
-                                "Delete Inquiry",
-                                style: TextStyle(
-                                    color: kPrimaryColor, fontSize: 13),
-                              ),
-                              const Gap(10)
-                            ],
-                          ),
-                        ),
-                      )
-                    ])
+                  ? closeInquiryButton()
+                  : openInquiryButtonAndDeleteButton()
             ],
           ),
         ),
@@ -331,6 +258,182 @@ class _InquiryPanelState extends State<InquiryPanel> {
           ],
         )
       ],
+    );
+  }
+
+  Widget openInquiryButtonAndDeleteButton() {
+    return BlocConsumer<UpdateInquiryBloc, InquiryUpdateStates>(
+      builder: (context, state) {
+        if (state is InquiryUpdateLoading) {
+          return CupertinoActivityIndicator(
+            color: kPrimaryColor,
+          );
+        } else {
+          return Row(children: [
+            GestureDetector(
+              onTap: () {
+                if (closedInquiry == null) {
+                  showTopSnackBar(
+                    Overlay.of(context),
+                    CustomSnackBar.error(
+                      message: "Please select an inquiry to open!",
+                    ),
+                  );
+                } else {
+                  closedInquiry!.isOpened = true;
+                  inquiryUpdateBloc.add(UpdateInquiry(inquiry: closedInquiry!));
+                }
+              },
+              child: Container(
+                width: 160,
+                height: 30,
+                color: const Color.fromARGB(255, 64, 64, 64),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.restore,
+                      color: kPrimaryColor,
+                      size: 20,
+                    ),
+                    const Gap(10),
+                    Text(
+                      "Open Inquiry",
+                      style: TextStyle(color: kPrimaryColor, fontSize: 13),
+                    ),
+                    const Gap(10)
+                  ],
+                ),
+              ),
+            ),
+            const Gap(20),
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                width: 160,
+                height: 30,
+                color: const Color.fromARGB(255, 64, 64, 64),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.delete,
+                      color: kPrimaryColor,
+                      size: 20,
+                    ),
+                    const Gap(10),
+                    Text(
+                      "Delete Inquiry",
+                      style: TextStyle(color: kPrimaryColor, fontSize: 13),
+                    ),
+                    const Gap(10)
+                  ],
+                ),
+              ),
+            )
+          ]);
+        }
+      },
+      listener: (context, state) {
+        if (state is InquiryUpdated) {
+          setState(() {
+            closedInquiry = null;
+          });
+          closedInquiryBloc.add(FetchClosedInquiresByAdmin());
+          openedInquiryBloc.add(FetchOpenedInquiresByAdmin());
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.success(
+              message: state.message,
+            ),
+          );
+        }
+
+        if (state is InquiryUpdateError) {
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(
+              message: state.message,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  Widget closeInquiryButton() {
+    return BlocConsumer<UpdateInquiryBloc, InquiryUpdateStates>(
+      builder: (context, state) {
+        if (state is InquiryUpdateLoading) {
+          return CupertinoActivityIndicator(
+            color: kPrimaryColor,
+          );
+        } else {
+          return GestureDetector(
+            onTap: () {
+              if (openedInquiry == null) {
+                showTopSnackBar(
+                  Overlay.of(context),
+                  CustomSnackBar.error(
+                    message: "Please select an inquiry to close!",
+                  ),
+                );
+              } else {
+                openedInquiry!.isOpened = false;
+                inquiryUpdateBloc.add(UpdateInquiry(inquiry: openedInquiry!));
+              }
+            },
+            child: Container(
+              width: 160,
+              height: 30,
+              color: const Color.fromARGB(255, 64, 64, 64),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check,
+                    color: kPrimaryColor,
+                    size: 20,
+                  ),
+                  const Gap(10),
+                  Text(
+                    "Close Inquiry",
+                    style: TextStyle(color: kPrimaryColor, fontSize: 13),
+                  ),
+                  const Gap(10)
+                ],
+              ),
+            ),
+          );
+        }
+      },
+      listener: (context, state) {
+        if (state is InquiryUpdated) {
+          
+          setState(() {
+            openedInquiry = null;
+          });
+
+          openedInquiryBloc.add(FetchOpenedInquiresByAdmin());
+          closedInquiryBloc.add(FetchClosedInquiresByAdmin());
+
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.success(
+              message: state.message,
+            ),
+          );
+        }
+
+        if (state is InquiryUpdateError) {
+          showTopSnackBar(
+            Overlay.of(context),
+            CustomSnackBar.error(
+              message: state.message,
+            ),
+          );
+        }
+      },
     );
   }
 

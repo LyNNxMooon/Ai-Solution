@@ -125,4 +125,13 @@ class AdminModel implements AdminRepo {
       return Future.error(error);
     }
   }
+
+  @override
+  Future<void> updateInquiry(InquiryVO inquiry) async {
+    try {
+      return await _firebaseAgent.updateInquiry(inquiry);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
 }

@@ -96,3 +96,21 @@ class ClosedInquiriesLoaded extends ClosedInquiryStates {
 
   ClosedInquiriesLoaded(this.closedInquires);
 }
+
+abstract class InquiryUpdateStates {}
+
+class InquiryUpdateInitial extends InquiryUpdateStates {}
+
+class InquiryUpdateLoading extends InquiryUpdateStates {}
+
+class InquiryUpdated extends InquiryUpdateStates {
+  final String message;
+
+  InquiryUpdated(this.message);
+}
+
+class InquiryUpdateError extends InquiryUpdateStates {
+  final String message;
+
+  InquiryUpdateError(this.message);
+}

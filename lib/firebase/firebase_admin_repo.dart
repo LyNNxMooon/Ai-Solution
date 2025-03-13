@@ -1,5 +1,6 @@
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
 import 'package:ai_solution/domain/admin_repo.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class FirebaseAdminRepo implements AdminRepo {
@@ -32,7 +33,8 @@ class FirebaseAdminRepo implements AdminRepo {
   }
 
   @override
-  Future<List<InquiryVO>> filterClosedInquires(String keyword, bool isSearch) async {
+  Future<List<InquiryVO>> filterClosedInquires(
+      String keyword, bool isSearch) async {
     try {
       final snapshot = await databaseRef.child("inquries").once();
       return snapshot.snapshot.children.map<InquiryVO>((snapshot) {
@@ -45,7 +47,8 @@ class FirebaseAdminRepo implements AdminRepo {
   }
 
   @override
-  Future<List<InquiryVO>> filterOpenedInquires(String keyword, bool isSearch) async {
+  Future<List<InquiryVO>> filterOpenedInquires(
+      String keyword, bool isSearch) async {
     try {
       final snapshot = await databaseRef.child("inquries").once();
       return snapshot.snapshot.children.map<InquiryVO>((snapshot) {
@@ -54,6 +57,18 @@ class FirebaseAdminRepo implements AdminRepo {
       }).toList();
     } catch (error) {
       throw Exception("Error fetching inquires: $error");
+    }
+  }
+
+  @override
+  Future<void> updateInquiry(InquiryVO inquiry) async {
+    try {
+      return databaseRef
+          .child("inquries")
+          .child(inquiry.id.toString())
+          .set(inquiry.toJson());
+    } on FirebaseException catch (error) {
+      return Future.error(error);
     }
   }
 }
