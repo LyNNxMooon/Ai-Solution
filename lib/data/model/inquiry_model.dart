@@ -28,9 +28,16 @@ class InquiryModel implements InquiryRepo {
   }
 
   @override
-  Future<List<ServicesVO>> fetchAllServices() async{
+  Future<List<ServicesVO>> fetchAllServices(bool isAdmin) async{
     try {
-      return await _firebaseAgent.fetchAllServices();
+
+      List<ServicesVO> services = await _firebaseAgent.fetchAllServices(isAdmin); 
+      
+      if (isAdmin) {
+          services.insert(0, ServicesVO(id: 0, name: "All"));
+      }
+      
+      return services;
     } on Exception catch (error) {
       return Future.error(error);
     }

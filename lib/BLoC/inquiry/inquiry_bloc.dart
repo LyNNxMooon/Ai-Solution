@@ -51,7 +51,7 @@ class SerivceBloc extends Bloc<ServiceEvents, ServiceStates> {
       FetchServicesByAdmin event, Emitter<ServiceStates> emit) async {
     try {
       emit(ServiceLoading());
-      final fetchedServices = await inquiryRepo.fetchAllServices();
+      final fetchedServices = await inquiryRepo.fetchAllServices(true);
 
       final serviceNames = <String>[];
       for (ServicesVO service in fetchedServices) {
@@ -68,7 +68,7 @@ class SerivceBloc extends Bloc<ServiceEvents, ServiceStates> {
       FetchServices event, Emitter<ServiceStates> emit) async {
     try {
       emit(ServiceLoading());
-      final fetchedServices = await inquiryRepo.fetchAllServices();
+      final fetchedServices = await inquiryRepo.fetchAllServices(false);
 
       final serviceNames = <String>[];
       for (ServicesVO service in fetchedServices) {
@@ -143,6 +143,7 @@ class OpenInquiryBloc extends Bloc<InquiryEvents, OpenInquiryStates> {
 
   OpenInquiryBloc({required this.adminRepo}) : super(OpenInquiryInitial()) {
     on<FetchOpenedInquiresByAdmin>(_onFetchOpenedInquiresByAdmin);
+    on<FilterOpenedInquiriesByAdmin>(_onFilterOpenedInquiriesByAdmin);
   }
 
   Future _onFetchOpenedInquiresByAdmin(
@@ -156,6 +157,19 @@ class OpenInquiryBloc extends Bloc<InquiryEvents, OpenInquiryStates> {
       emit(OpenedInquiryError('$error'));
     }
   }
+
+  Future _onFilterOpenedInquiriesByAdmin(FilterOpenedInquiriesByAdmin event,
+      Emitter<OpenInquiryStates> emit) async {
+    try {
+      emit(OpenInquiryLoading());
+      final filteredOpenedInquiriesByAdmin =
+          await adminRepo.filterOpenedInquires(event.service);
+
+      emit(OpenedInquiriesLoaded(filteredOpenedInquiriesByAdmin));
+    } catch (error) {
+      emit(OpenedInquiryError('$error'));
+    }
+  }
 }
 
 class ClosedInquiryBloc extends Bloc<InquiryEvents, ClosedInquiryStates> {
@@ -163,6 +177,7 @@ class ClosedInquiryBloc extends Bloc<InquiryEvents, ClosedInquiryStates> {
 
   ClosedInquiryBloc({required this.adminRepo}) : super(ClosedInquiryInitial()) {
     on<FetchClosedInquiresByAdmin>(_onFetchClosedInquiresByAdmin);
+    on<FilterClosedInquiriesByAdmin>(_onFilterClosedInquiriesByAdmin);
   }
 
   Future _onFetchClosedInquiresByAdmin(FetchClosedInquiresByAdmin event,
@@ -172,6 +187,19 @@ class ClosedInquiryBloc extends Bloc<InquiryEvents, ClosedInquiryStates> {
       final fetchedClosedInquires = await adminRepo.fetchAllClosedInquires();
 
       emit(ClosedInquiriesLoaded(fetchedClosedInquires));
+    } catch (error) {
+      emit(ClosedInquiryError('$error'));
+    }
+  }
+
+  Future _onFilterClosedInquiriesByAdmin(FilterClosedInquiriesByAdmin event,
+      Emitter<ClosedInquiryStates> emit) async {
+    try {
+      emit(ClosedInquiryLoading());
+      final filteredClosedInquiriesByAdmin =
+          await adminRepo.filterClosedInquires(event.service);
+
+      emit(ClosedInquiriesLoaded(filteredClosedInquiriesByAdmin));
     } catch (error) {
       emit(ClosedInquiryError('$error'));
     }

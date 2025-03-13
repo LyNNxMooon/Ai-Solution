@@ -4,7 +4,7 @@ class FetchCountry extends CountryEvents {}
 
 abstract class ServiceEvents {}
 
-class FetchServices extends ServiceEvents{}
+class FetchServices extends ServiceEvents {}
 
 class FetchServicesByAdmin extends ServiceEvents {}
 
@@ -35,4 +35,16 @@ class SubmitInquiry extends InquiryEvents {
 
 class FetchOpenedInquiresByAdmin extends InquiryEvents {}
 
-class FetchClosedInquiresByAdmin extends InquiryEvents {} 
+class FetchClosedInquiresByAdmin extends InquiryEvents {}
+
+class FilterOpenedInquiriesByAdmin extends InquiryEvents {
+  final String service;
+
+  FilterOpenedInquiriesByAdmin({required this.service});
+}
+
+class FilterClosedInquiriesByAdmin extends InquiryEvents {
+  final String service;
+
+  FilterClosedInquiriesByAdmin({required this.service});
+}

@@ -56,7 +56,7 @@ class _AdminPanelState extends State<AdminPanel> {
             } else if (state is Authenticated) {
               return dashBoard();
             } else {
-              return loginUI();
+              return dashBoard();
             }
           },
         ));

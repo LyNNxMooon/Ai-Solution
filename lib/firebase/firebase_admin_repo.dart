@@ -30,4 +30,30 @@ class FirebaseAdminRepo implements AdminRepo {
       throw Exception("Error fetching inquires: $error");
     }
   }
+
+  @override
+  Future<List<InquiryVO>> filterClosedInquires(String service) async {
+    try {
+      final snapshot = await databaseRef.child("inquries").once();
+      return snapshot.snapshot.children.map<InquiryVO>((snapshot) {
+        return InquiryVO.fromJson(
+            Map<String, dynamic>.from(snapshot.value as Map));
+      }).toList();
+    } catch (error) {
+      throw Exception("Error fetching inquires: $error");
+    }
+  }
+
+  @override
+  Future<List<InquiryVO>> filterOpenedInquires(String service) async {
+    try {
+      final snapshot = await databaseRef.child("inquries").once();
+      return snapshot.snapshot.children.map<InquiryVO>((snapshot) {
+        return InquiryVO.fromJson(
+            Map<String, dynamic>.from(snapshot.value as Map));
+      }).toList();
+    } catch (error) {
+      throw Exception("Error fetching inquires: $error");
+    }
+  }
 }

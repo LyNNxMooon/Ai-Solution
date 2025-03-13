@@ -36,7 +36,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
     super.initState();
   }
 
-  String? selectedValue;
+  String? selectedServiceValue;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -56,9 +56,15 @@ class _InquiryPanelState extends State<InquiryPanel> {
                     backgroundColor: const Color.fromARGB(255, 64, 64, 64),
                     itemColor: kPrimaryColor,
                     itemSize: 16,
+                    placeholder: "Search by email",
                     style: TextStyle(fontSize: 13, color: Colors.white),
                   )),
               const Gap(20),
+              Text(
+                selectedServiceValue ?? "All",
+                style: TextStyle(
+                    color: kPrimaryColor, fontWeight: FontWeight.w500),
+              ),
               BlocBuilder<SerivceBloc, ServiceStates>(
                 builder: (context, state) {
                   if (state is ServiceLoading) {
@@ -68,7 +74,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
                           size: 25, color: kPrimaryColor), // Icon button
                       onSelected: (String value) {
                         setState(() {
-                          selectedValue = value;
+                          selectedServiceValue = value;
                         });
                       },
                       itemBuilder: (BuildContext context) {
@@ -87,8 +93,15 @@ class _InquiryPanelState extends State<InquiryPanel> {
                           size: 25, color: kPrimaryColor), // Icon button
                       onSelected: (String value) {
                         setState(() {
-                          selectedValue = value;
+                          openedInquiry = null;
+                          closedInquiry = null;
+                          selectedServiceValue = value;
                         });
+                        isOpenTapped
+                            ? openedInquiryBloc.add(
+                                FilterOpenedInquiriesByAdmin(service: value))
+                            : closedInquiryBloc.add(
+                                FilterClosedInquiriesByAdmin(service: value));
                       },
                       itemBuilder: (BuildContext context) {
                         return state.services.map((String item) {
@@ -312,8 +325,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
     return openedInquiry == null
         ? SizedBox()
         : SingleChildScrollView(
-
-          child: Column(
+            child: Column(
               //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -384,11 +396,12 @@ class _InquiryPanelState extends State<InquiryPanel> {
                     const Gap(10),
                     Text(
                       "About Job",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                   ],
                 ),
-                 const Gap(30),
+                const Gap(30),
                 Text(
                   "Service",
                   style: TextStyle(fontSize: 12, color: Colors.black54),
@@ -405,21 +418,19 @@ class _InquiryPanelState extends State<InquiryPanel> {
                   "Details",
                   style: TextStyle(fontSize: 12, color: Colors.black54),
                 ),
-                 Text(
+                Text(
                   openedInquiry!.jobDetails,
-                 
                 ),
               ],
             ),
-        );
+          );
   }
 
   Widget closedInquiryDetail() {
     return closedInquiry == null
         ? SizedBox()
         : SingleChildScrollView(
-
-          child: Column(
+            child: Column(
               //mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -490,11 +501,12 @@ class _InquiryPanelState extends State<InquiryPanel> {
                     const Gap(10),
                     Text(
                       "About Job",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     ),
                   ],
                 ),
-                 const Gap(30),
+                const Gap(30),
                 Text(
                   "Service",
                   style: TextStyle(fontSize: 12, color: Colors.black54),
@@ -511,13 +523,12 @@ class _InquiryPanelState extends State<InquiryPanel> {
                   "Details",
                   style: TextStyle(fontSize: 12, color: Colors.black54),
                 ),
-                 Text(
+                Text(
                   closedInquiry!.jobDetails,
-                 
                 ),
               ],
             ),
-        );
+          );
   }
 
   Widget openedInquiriesUI() {

@@ -35,7 +35,7 @@ class FirebaseInquiryRepo implements InquiryRepo {
   }
 
   @override
-  Future<List<ServicesVO>> fetchAllServices() async {
+  Future<List<ServicesVO>> fetchAllServices(bool isAdmin) async {
    try {
       final snapshot = await databaseRef.child("services").once();
       return snapshot.snapshot.children.map<ServicesVO>((snapshot) {
