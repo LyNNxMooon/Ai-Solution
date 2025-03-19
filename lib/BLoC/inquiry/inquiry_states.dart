@@ -114,3 +114,21 @@ class InquiryUpdateError extends InquiryUpdateStates {
 
   InquiryUpdateError(this.message);
 }
+
+abstract class DeleteInquiryStates {}
+
+class DeleteInquiryInitial extends DeleteInquiryStates {}
+
+class DeleteInquiryLoading extends DeleteInquiryStates {}
+
+class InquiryDeleted extends DeleteInquiryStates {
+  final String message;
+
+  InquiryDeleted(this.message);
+}
+
+class DeleteInquiryError extends DeleteInquiryStates {
+  final String message;
+
+  DeleteInquiryError(this.message);
+}

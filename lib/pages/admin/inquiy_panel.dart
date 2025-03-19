@@ -28,6 +28,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
   late final openedInquiryBloc = context.read<OpenInquiryBloc>();
   late final closedInquiryBloc = context.read<ClosedInquiryBloc>();
   late final inquiryUpdateBloc = context.read<UpdateInquiryBloc>();
+  late final inquiryDeleteBloc = context.read<DeleteInquiryBloc>();
 
   InquiryVO? openedInquiry;
 
@@ -262,15 +263,15 @@ class _InquiryPanelState extends State<InquiryPanel> {
   }
 
   Widget openInquiryButtonAndDeleteButton() {
-    return BlocConsumer<UpdateInquiryBloc, InquiryUpdateStates>(
-      builder: (context, state) {
-        if (state is InquiryUpdateLoading) {
-          return CupertinoActivityIndicator(
-            color: kPrimaryColor,
-          );
-        } else {
-          return Row(children: [
-            GestureDetector(
+    return Row(children: [
+      BlocConsumer<UpdateInquiryBloc, InquiryUpdateStates>(
+        builder: (context, state) {
+          if (state is InquiryUpdateLoading) {
+            return CupertinoActivityIndicator(
+              color: kPrimaryColor,
+            );
+          } else {
+            return GestureDetector(
               onTap: () {
                 if (closedInquiry == null) {
                   showTopSnackBar(
@@ -305,10 +306,55 @@ class _InquiryPanelState extends State<InquiryPanel> {
                   ],
                 ),
               ),
-            ),
-            const Gap(20),
-            GestureDetector(
-              onTap: () {},
+            );
+          }
+        },
+        listener: (context, state) {
+          if (state is InquiryUpdated) {
+            setState(() {
+              closedInquiry = null;
+            });
+            closedInquiryBloc.add(FetchClosedInquiresByAdmin());
+            openedInquiryBloc.add(FetchOpenedInquiresByAdmin());
+            showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.success(
+                message: state.message,
+              ),
+            );
+          }
+
+          if (state is InquiryUpdateError) {
+            showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.error(
+                message: state.message,
+              ),
+            );
+          }
+        },
+      ),
+      const Gap(20),
+      BlocConsumer<DeleteInquiryBloc, DeleteInquiryStates>(
+        builder: (context, state) {
+          if (state is DeleteInquiryLoading) {
+            return CupertinoActivityIndicator(
+              color: kPrimaryColor,
+            );
+          } else {
+            return GestureDetector(
+              onTap: () {
+                if (closedInquiry == null) {
+                  showTopSnackBar(
+                    Overlay.of(context),
+                    CustomSnackBar.error(
+                      message: "Please select an inquiry to delete!",
+                    ),
+                  );
+                } else {
+                  inquiryDeleteBloc.add(DeleteInquiry(id: closedInquiry!.id));
+                }
+              },
               child: Container(
                 width: 160,
                 height: 30,
@@ -330,35 +376,35 @@ class _InquiryPanelState extends State<InquiryPanel> {
                   ],
                 ),
               ),
-            )
-          ]);
-        }
-      },
-      listener: (context, state) {
-        if (state is InquiryUpdated) {
-          setState(() {
-            closedInquiry = null;
-          });
-          closedInquiryBloc.add(FetchClosedInquiresByAdmin());
-          openedInquiryBloc.add(FetchOpenedInquiresByAdmin());
-          showTopSnackBar(
-            Overlay.of(context),
-            CustomSnackBar.success(
-              message: state.message,
-            ),
-          );
-        }
+            );
+          }
+        },
+        listener: (context, state) {
+          if (state is InquiryDeleted) {
+            setState(() {
+              closedInquiry = null;
+            });
+            closedInquiryBloc.add(FetchClosedInquiresByAdmin());
 
-        if (state is InquiryUpdateError) {
-          showTopSnackBar(
-            Overlay.of(context),
-            CustomSnackBar.error(
-              message: state.message,
-            ),
-          );
-        }
-      },
-    );
+            showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.success(
+                message: state.message,
+              ),
+            );
+          }
+
+          if (state is DeleteInquiryError) {
+            showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.error(
+                message: state.message,
+              ),
+            );
+          }
+        },
+      )
+    ]);
   }
 
   Widget closeInquiryButton() {
@@ -409,7 +455,6 @@ class _InquiryPanelState extends State<InquiryPanel> {
       },
       listener: (context, state) {
         if (state is InquiryUpdated) {
-          
           setState(() {
             openedInquiry = null;
           });

@@ -227,3 +227,25 @@ class UpdateInquiryBloc extends Bloc<InquiryEvents, InquiryUpdateStates> {
     }
   }
 }
+
+class DeleteInquiryBloc extends Bloc<InquiryEvents, DeleteInquiryStates> {
+  final AdminRepo adminRepo;
+
+  DeleteInquiryBloc({required this.adminRepo}) : super(DeleteInquiryInitial()) {
+    on<DeleteInquiry>(_onDeleteInquiry);
+  }
+
+  Future _onDeleteInquiry(
+      DeleteInquiry event, Emitter<DeleteInquiryStates> emit) async {
+    try {
+      emit(DeleteInquiryLoading());
+      await adminRepo.deleteInquiry(event.id).then(
+        (value) {
+          emit(InquiryDeleted("Inquiry Deleted!"));
+        },
+      );
+    } catch (error) {
+      emit(DeleteInquiryError('$error'));
+    }
+  }
+}

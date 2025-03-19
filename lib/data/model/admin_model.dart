@@ -134,4 +134,13 @@ class AdminModel implements AdminRepo {
       return Future.error(error);
     }
   }
+
+  @override
+  Future<void> deleteInquiry(int id) async {
+    try {
+      return await _firebaseAgent.deleteInquiry(id);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
 }

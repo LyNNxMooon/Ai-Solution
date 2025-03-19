@@ -58,3 +58,9 @@ class UpdateInquiry extends InquiryEvents {
 
   UpdateInquiry({required this.inquiry});
 }
+
+class DeleteInquiry extends InquiryEvents {
+  final int id;
+
+  DeleteInquiry({required this.id});
+}

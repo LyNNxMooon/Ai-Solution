@@ -9,4 +9,6 @@ abstract class AdminRepo {
   Future<List<InquiryVO>> filterClosedInquires(String keyword, bool isSearch);
 
   Future<void> updateInquiry (InquiryVO inquiry);
+
+  Future<void> deleteInquiry (int id);
 }

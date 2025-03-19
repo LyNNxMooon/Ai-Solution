@@ -71,4 +71,14 @@ class FirebaseAdminRepo implements AdminRepo {
       return Future.error(error);
     }
   }
+  
+  @override
+  Future<void> deleteInquiry(int id) {
+     try {
+      return databaseRef.child("inquries").child(id.toString()).remove();
+    } on FirebaseException catch (error) {
+      //print(error);
+      return Future.error(error);
+    }
+  }
 }
