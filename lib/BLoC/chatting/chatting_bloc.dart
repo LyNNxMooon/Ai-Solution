@@ -1,16 +1,17 @@
-import 'dart:convert';
-import 'dart:math';
+
 
 import 'package:ai_solution/BLoC/chatting/chatting_events.dart';
 import 'package:ai_solution/BLoC/chatting/chatting_states.dart';
 import 'package:ai_solution/data/vos/admin_uid_vo.dart';
 import 'package:ai_solution/domain/chatting_repo.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MessageBloc extends Bloc<ChattingEvents, MessagingStates> {
   final ChattingRepo chattingRepo;
+  final String userID;
 
-  MessageBloc({required this.chattingRepo}) : super(MessagingInitial()) {
+  MessageBloc({required this.chattingRepo, required this.userID}) : super(MessagingInitial()) {
     on<SendMessage>(_onSendMessage);
   }
 
@@ -20,14 +21,17 @@ class MessageBloc extends Bloc<ChattingEvents, MessagingStates> {
     return adminID[0].id;
   }
 
+  Stream<DatabaseEvent> getMessages (String otherUserID ) {
+    return chattingRepo.getMessages(userID, otherUserID);
+  }
+
   Future<void> _onSendMessage(
       SendMessage event, Emitter<MessagingStates> emit) async {
     try {
-      var random = Random.secure();
-      var values = List<int>.generate(16, (i) => random.nextInt(256));
+     
 
       await chattingRepo.sendMessages(
-          event.receiverID, base64UrlEncode(values), event.message);
+          event.receiverID, userID, event.message);
     } catch (error) {
       emit(SentMessageError("$error"));
     }

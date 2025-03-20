@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_final_fields
 
+import 'package:ai_solution/BLoC/chatting/chatting_bloc.dart';
+import 'package:ai_solution/BLoC/chatting/chatting_events.dart';
+import 'package:ai_solution/BLoC/chatting/chatting_states.dart';
 import 'package:ai_solution/constant/colors.dart';
+import 'package:ai_solution/data/vos/message_vo.dart';
 import 'package:ai_solution/pages/about_page.dart';
 import 'package:ai_solution/pages/events_page.dart';
 import 'package:ai_solution/pages/faq_page.dart';
@@ -10,7 +14,10 @@ import 'package:ai_solution/utils/hover_extension.dart';
 import 'package:ai_solution/widgets/text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class IndexPage extends StatefulWidget {
   const IndexPage({super.key});
@@ -21,6 +28,7 @@ class IndexPage extends StatefulWidget {
 
 class _IndexPageState extends State<IndexPage> {
   final _searchController = TextEditingController();
+  final _messageController = TextEditingController();
   bool _isHoverItem = false;
   bool _isHoverItem2 = false;
   bool _isHoverItem3 = false;
@@ -30,6 +38,20 @@ class _IndexPageState extends State<IndexPage> {
   int _currentIndex = 0;
 
   bool _isChatVisible = false;
+
+  String adminUID = "";
+
+  late final chattingBloc = context.read<MessageBloc>();
+
+  @override
+  void initState() {
+    chattingBloc.fetchAdminUID().then(
+      (value) {
+        adminUID = value;
+      },
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,64 +92,124 @@ class _IndexPageState extends State<IndexPage> {
             ),
           ),
           if (_isChatVisible)
-            Positioned(
-              bottom: 80, // Adjust position above FAB
-              right: 20, // Align to FAB
-              child: Material(
-                elevation: 8,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  width: 400,
-                  height: 450,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    children: [
-                      // Chat Header
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Live Chat",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)),
-                          IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () {
-                              setState(() {
-                                _isChatVisible = false;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      Divider(),
-                      Expanded(
-                        child: ListView(
+            BlocListener<MessageBloc, MessagingStates>(
+              listener: (context, state) {
+                if (state is SentMessageError) {
+                  showTopSnackBar(
+                    Overlay.of(context),
+                    CustomSnackBar.error(
+                      message: state.message,
+                    ),
+                  );
+                }
+              },
+              child: Positioned(
+                bottom: 80, // Adjust position above FAB
+                right: 20, // Align to FAB
+                child: Material(
+                  elevation: 8,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: 400,
+                    height: 450,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        // Chat Header
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Hello! How can I help you?"),
-                            // Chat messages will be here
+                            Text("Live Chat",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18)),
+                            IconButton(
+                              icon: Icon(Icons.close),
+                              onPressed: () {
+                                setState(() {
+                                  _isChatVisible = false;
+                                });
+                              },
+                            ),
                           ],
                         ),
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: "Type a message...",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: kFourthColor)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: kFourthColor)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: kFourthColor)),
-                          suffixIcon: Icon(Icons.send),
+                        Divider(),
+                        Expanded(
+                          child: StreamBuilder(
+                            stream: chattingBloc.getMessages(adminUID),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasError) {
+                                return const Center(
+                                  child: Text("Cannot load messages"),
+                                );
+                              }
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CupertinoActivityIndicator(),
+                                );
+                              }
+
+                              if (snapshot.hasData &&
+                                  snapshot.data!.snapshot.value != null) {
+                                Map<dynamic, dynamic> messagesMap = snapshot
+                                    .data!
+                                    .snapshot
+                                    .value as Map<dynamic, dynamic>;
+                                List<MessageVO> messages =
+                                    messagesMap.values.map((message) {
+                                  return MessageVO.fromJson(
+                                      Map<String, dynamic>.from(message));
+                                }).toList();
+
+                                // Sort the messages by timeStamp in ascending order
+                                messages.sort((a, b) =>
+                                    a.timeStamp.compareTo(b.timeStamp));
+
+                                messages = messages.reversed.toList();
+
+                                return ListView(
+                                  reverse: true,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  // Removed reverse: true to fix the ordering
+                                  children: messages
+                                      .map((message) =>
+                                          MessageItemView(message: message, userID: chattingBloc.userID,))
+                                      .toList(),
+                                );
+                              } else {
+                                return const Center(
+                                  child: Text("No messages yet"),
+                                );
+                              }
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                        TextField(
+                          controller: _messageController,
+                          decoration: InputDecoration(
+                            hintText: "Type a message...",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: kFourthColor)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: kFourthColor)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: kFourthColor)),
+                            suffixIcon: GestureDetector(onTap: () {
+                              chattingBloc.add(SendMessage(receiverID: adminUID, message: _messageController.text));
+                              _messageController.clear();
+                            },child: Icon(Icons.send)),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -276,11 +358,12 @@ class _IndexPageState extends State<IndexPage> {
                       )
                     ],
                   ),
-                 
                 ],
               ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Gap(10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Gap(10),
                   Text(
                     "Contact Us",
                     style: TextStyle(
@@ -330,8 +413,8 @@ class _IndexPageState extends State<IndexPage> {
                       )
                     ],
                   ),
-                  
-              ],),
+                ],
+              ),
               Column(
                 children: [
                   Row(
@@ -561,6 +644,43 @@ class _IndexPageState extends State<IndexPage> {
             ],
           )
         ],
+      ),
+    );
+  }
+}
+
+class MessageItemView extends StatelessWidget {
+  const MessageItemView({super.key, required this.message, required this.userID});
+
+  final MessageVO message;
+
+  final String userID;
+
+  @override
+  Widget build(BuildContext context) {
+    // Determine the color and alignment based on the sender
+    Color bubbleColor =
+        (message.senderID == userID)
+            ? const Color.fromARGB(255, 230, 227, 227)
+            : const Color.fromARGB(156, 234, 235, 232);
+
+    var alignment = (message.senderID == userID)
+        ? Alignment.centerRight
+        : Alignment.centerLeft;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      alignment: alignment,
+      child: Container(
+        padding: 
+             const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+        constraints: const BoxConstraints(maxWidth: 220),
+        decoration: BoxDecoration(
+            color: bubbleColor, borderRadius: BorderRadius.circular(15)),
+        child:  Text(
+                message.message,
+                style: const TextStyle(fontSize: 14),
+              ),
       ),
     );
   }

@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:ai_solution/BLoC/admin_auth/admin_auth_bloc.dart';
 import 'package:ai_solution/BLoC/chatting/chatting_bloc.dart';
 import 'package:ai_solution/BLoC/clients/client_bloc.dart';
@@ -58,6 +61,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var random = Random.secure();
+    var values = List<int>.generate(16, (i) => random.nextInt(256));
+
     return MultiBlocProvider(
         providers: [
           BlocProvider<ClientBloc>(
@@ -120,7 +126,7 @@ class MyApp extends StatelessWidget {
             create: (context) => DeleteInquiryBloc(adminRepo: adminRepo),
           ),
           BlocProvider<MessageBloc>(
-            create: (context) => MessageBloc(chattingRepo: chattingRepo),
+            create: (context) => MessageBloc(chattingRepo: chattingRepo, userID: base64UrlEncode(values)),
           ),
         ],
         child: MaterialApp.router(
