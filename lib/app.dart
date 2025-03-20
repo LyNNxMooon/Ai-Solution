@@ -1,4 +1,5 @@
 import 'package:ai_solution/BLoC/admin_auth/admin_auth_bloc.dart';
+import 'package:ai_solution/BLoC/chatting/chatting_bloc.dart';
 import 'package:ai_solution/BLoC/clients/client_bloc.dart';
 import 'package:ai_solution/BLoC/clients/client_events.dart';
 import 'package:ai_solution/BLoC/current_solutions/current_solutions_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_bloc.dart
 import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_events.dart';
 import 'package:ai_solution/data/model/admin_auth_model.dart';
 import 'package:ai_solution/data/model/admin_model.dart';
+import 'package:ai_solution/data/model/chatting_model.dart';
 import 'package:ai_solution/data/model/events_model.dart';
 import 'package:ai_solution/data/model/feedback_model.dart';
 import 'package:ai_solution/data/model/gallery_model.dart';
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
   final feedbackRepo = FeedbackModel();
   final adminAuthRepo = AdminAuthModel();
   final adminRepo = AdminModel();
+  final chattingRepo = ChattingModel();
 
   final GoRouter router = GoRouter(routes: [
     GoRoute(
@@ -115,6 +118,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<DeleteInquiryBloc>(
             create: (context) => DeleteInquiryBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<MessageBloc>(
+            create: (context) => MessageBloc(chattingRepo: chattingRepo),
           ),
         ],
         child: MaterialApp.router(
