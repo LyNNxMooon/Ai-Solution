@@ -37,4 +37,16 @@ class ChattingModel implements ChattingRepo {
       return Future.error(error);
     }
   }
+  
+  @override
+  Stream<DatabaseEvent> getMessagesByAdmin(String userID, String otherUserID) {
+    // TODO: implement getMessagesByAdmin
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> sendMessagesByAdmin(String receiverID, String senderID, String message) {
+    // TODO: implement sendMessagesByAdmin
+    throw UnimplementedError();
+  }
 }

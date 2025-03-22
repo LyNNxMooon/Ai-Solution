@@ -12,8 +12,8 @@ class FirebaseChattingRepo implements ChattingRepo {
   final databaseRef = FirebaseDatabase.instance.ref();
   @override
   Stream<List<ChattedUserVO>?> getChatListStream() {
-    //final String currentUserID = _firebaseAuth.currentUser!.uid;
-    final String currentUserID = "RN9p2uOaTjR3zY2FG4ABf1GIlb83";
+    final String currentUserID = _firebaseAuth.currentUser!.uid;
+    //final String currentUserID = "RN9p2uOaTjR3zY2FG4ABf1GIlb83";
 
     return _firebaseDatabase
         .ref('users/$currentUserID/chats')
@@ -91,5 +91,17 @@ class FirebaseChattingRepo implements ChattingRepo {
     } catch (error) {
       throw Exception("Error fetching admin id: $error");
     }
+  }
+  
+  @override
+  Stream<DatabaseEvent> getMessagesByAdmin(String userID, String otherUserID) {
+    // TODO: implement getMessagesByAdmin
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> sendMessagesByAdmin(String receiverID, String senderID, String message) {
+    // TODO: implement sendMessagesByAdmin
+    throw UnimplementedError();
   }
 }

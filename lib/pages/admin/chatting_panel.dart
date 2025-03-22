@@ -1,6 +1,7 @@
 import 'package:ai_solution/BLoC/chatting/chatting_bloc.dart';
 import 'package:ai_solution/constant/colors.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:ai_solution/data/vos/chatted_user_vo.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -18,6 +19,22 @@ class _ChattingPanelState extends State<ChattingPanel> {
   int selectedTileIndex = 0;
 
   late final chattingBloc = context.read<MessageBloc>();
+
+  ChattedUserVO? chatUser;
+
+  final _messageController = TextEditingController();
+
+  @override
+  void initState() {
+    List<ChattedUserVO> userList = [];
+
+    chattingBloc.chattingRepo
+        .getChatListStream()
+        .map((event) => userList = event ?? []);
+
+    chatUser = userList[0];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +156,45 @@ class _ChattingPanelState extends State<ChattingPanel> {
                   ],
                 ),
               ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 1 - 570,
+              height: MediaQuery.of(context).size.height * 1 - 50,
+              // height: double.infinity,
+              child: Column(
+                children: [
+                  Expanded(
+                      child: SizedBox(
+                    child: Text("..."),
+                  )),
+                  Container(
+                    margin: EdgeInsets.only(
+                        left: 20, right: 20, bottom: 10, top: 15),
+                    //width: 300,
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        hintText: "Type a message...",
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: kFourthColor)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: kFourthColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: kFourthColor)),
+                        suffixIcon: GestureDetector(
+                            onTap: () {
+                              // chattingBloc.add(SendMessage(receiverID: adminUID, message: _messageController.text));
+                              // _messageController.clear();
+                            },
+                            child: Icon(Icons.send)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
         )
@@ -171,7 +227,7 @@ class _ChattingPanelState extends State<ChattingPanel> {
           ),
           const Gap(8),
           Text(
-             message.length >= 40 ? "${ message.substring(0,40)} ..." : message,
+            message.length >= 40 ? "${message.substring(0, 40)} ..." : message,
             style: TextStyle(
                 fontSize: 13, color: const Color.fromARGB(255, 141, 141, 141)),
           ),
