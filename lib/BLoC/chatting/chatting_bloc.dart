@@ -3,6 +3,7 @@
 import 'package:ai_solution/BLoC/chatting/chatting_events.dart';
 import 'package:ai_solution/BLoC/chatting/chatting_states.dart';
 import 'package:ai_solution/data/vos/admin_uid_vo.dart';
+import 'package:ai_solution/data/vos/chatted_user_vo.dart';
 import 'package:ai_solution/domain/chatting_repo.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,5 +36,9 @@ class MessageBloc extends Bloc<ChattingEvents, MessagingStates> {
     } catch (error) {
       emit(SentMessageError("$error"));
     }
+  }
+
+  Stream<List<ChattedUserVO>?> fetchAllChattedUsers () {
+    return chattingRepo.getChatListStream();
   }
 }

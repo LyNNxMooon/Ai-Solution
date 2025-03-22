@@ -186,7 +186,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
                   ),
                   ListTile(
                     tileColor:
-                        isOpenTapped ? kMessageBubbleColor : kPrimaryColor,
+                        isOpenTapped ? Colors.black12 : kPrimaryColor,
                     onTap: () {
                       setState(() {
                         isOpenTapped = true;
@@ -216,7 +216,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
                   ),
                   ListTile(
                     tileColor:
-                        !isOpenTapped ? kMessageBubbleColor : kPrimaryColor,
+                        !isOpenTapped ? Colors.black12 : kPrimaryColor,
                     onTap: () {
                       setState(() {
                         isOpenTapped = false;
