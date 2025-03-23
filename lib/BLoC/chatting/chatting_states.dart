@@ -11,3 +11,9 @@ class SentMessageError extends MessagingStates {
 
   SentMessageError(this.message);
 }
+
+class SentMessageByAdminError extends MessagingStates {
+  final String message;
+
+  SentMessageByAdminError(this.message);
+}

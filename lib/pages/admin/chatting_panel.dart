@@ -24,17 +24,17 @@ class _ChattingPanelState extends State<ChattingPanel> {
 
   final _messageController = TextEditingController();
 
-  @override
-  void initState() {
-    List<ChattedUserVO> userList = [];
+  // @override
+  // void initState() {
+  //   List<ChattedUserVO> userList = [];
 
-    chattingBloc.chattingRepo
-        .getChatListStream()
-        .map((event) => userList = event ?? []);
+  //   chattingBloc.chattingRepo
+  //       .getChatListStream()
+  //       .map((event) => userList = event ?? []);
 
-    chatUser = userList[0];
-    super.initState();
-  }
+  //   chatUser = userList[0];
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -139,10 +139,8 @@ class _ChattingPanelState extends State<ChattingPanel> {
                           return ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemBuilder: (context, index) => chatUserTile(
-                                snapshot.data![index].chattedUserName,
-                                snapshot.data![index].lastMessage,
-                                index),
+                            itemBuilder: (context, index) =>
+                                chatUserTile(snapshot.data![index], index),
                             itemCount: snapshot.data!.length,
                           );
                         } else {
@@ -202,12 +200,13 @@ class _ChattingPanelState extends State<ChattingPanel> {
     );
   }
 
-  Widget chatUserTile(String name, String message, int index) {
+  Widget chatUserTile(ChattedUserVO chattedUser, int index) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       tileColor: index == selectedTileIndex ? Colors.black12 : kPrimaryColor,
       onTap: () {
         setState(() {
+          chatUser = chattedUser;
           selectedTileIndex = index;
         });
       },
@@ -222,12 +221,14 @@ class _ChattingPanelState extends State<ChattingPanel> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            name,
+            chattedUser.chattedUserName,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
           const Gap(8),
           Text(
-            message.length >= 40 ? "${message.substring(0, 40)} ..." : message,
+            chattedUser.lastMessage.length >= 40
+                ? "${chattedUser.lastMessage.substring(0, 40)} ..."
+                : chattedUser.lastMessage,
             style: TextStyle(
                 fontSize: 13, color: const Color.fromARGB(255, 141, 141, 141)),
           ),

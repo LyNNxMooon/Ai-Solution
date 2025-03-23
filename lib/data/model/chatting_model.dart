@@ -10,23 +10,23 @@ class ChattingModel implements ChattingRepo {
   factory ChattingModel() => _singleton;
   final _firebaseAgent = FirebaseChattingRepo();
   @override
-  Stream<List<ChattedUserVO>?> getChatListStream()  {
-     try {
-         return _firebaseAgent.getChatListStream();
-     } on Exception catch (error) {
+  Stream<List<ChattedUserVO>?> getChatListStream() {
+    try {
+      return _firebaseAgent.getChatListStream();
+    } on Exception catch (error) {
       return Stream.error(error);
-     }
+    }
   }
 
   @override
   Stream<DatabaseEvent> getMessages(String userID, String otherUserID) {
-     return _firebaseAgent.getMessages(userID, otherUserID);
+    return _firebaseAgent.getMessages(userID, otherUserID);
   }
 
   @override
   Future<void> sendMessages(
-      String receiverID, String senderID, String message) async  {
-      await _firebaseAgent.sendMessages(receiverID, senderID, message);
+      String receiverID, String senderID, String message) async {
+    await _firebaseAgent.sendMessages(receiverID, senderID, message);
   }
 
   @override
@@ -37,16 +37,15 @@ class ChattingModel implements ChattingRepo {
       return Future.error(error);
     }
   }
-  
+
   @override
   Stream<DatabaseEvent> getMessagesByAdmin(String userID, String otherUserID) {
-    // TODO: implement getMessagesByAdmin
-    throw UnimplementedError();
+    return _firebaseAgent.getMessagesByAdmin(userID, otherUserID);
   }
-  
+
   @override
-  Future<void> sendMessagesByAdmin(String receiverID, String senderID, String message) {
-    // TODO: implement sendMessagesByAdmin
-    throw UnimplementedError();
+  Future<void> sendMessagesByAdmin(
+      String receiverID, String senderID, String message) async {
+    await _firebaseAgent.sendMessagesByAdmin(receiverID, senderID, message);
   }
 }
