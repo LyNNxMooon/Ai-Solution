@@ -11,7 +11,7 @@ class SendMessageByAdmin extends ChattingEvents {
   final String receiverID;
   final String message;
 
-  SendMessageByAdmin({required this.message, required this.receiverID});
+  SendMessageByAdmin({required this.receiverID, required this.message});
 }
 
 //class GetMessage extends ChattingEvents {}

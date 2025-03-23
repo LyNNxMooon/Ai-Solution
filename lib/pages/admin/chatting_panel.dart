@@ -343,11 +343,11 @@ class MessageItemView extends StatelessWidget {
         : Alignment.centerLeft;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+      margin:  EdgeInsets.only(bottom: 20, right: 20, left: 20,  ),
       alignment: alignment,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-        constraints: const BoxConstraints(maxWidth: 300),
+        constraints: const BoxConstraints(maxWidth: 650),
         decoration: BoxDecoration(
             color: bubbleColor, borderRadius: BorderRadius.circular(15)),
         child: Text(

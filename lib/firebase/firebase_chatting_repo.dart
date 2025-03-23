@@ -14,8 +14,8 @@ class FirebaseChattingRepo implements ChattingRepo {
   final databaseRef = FirebaseDatabase.instance.ref();
   @override
   Stream<List<ChattedUserVO>?> getChatListStream() {
-    final String currentUserID = _firebaseAuth.currentUser!.uid;
-    //final String currentUserID = "RN9p2uOaTjR3zY2FG4ABf1GIlb83";
+    //final String currentUserID = _firebaseAuth.currentUser!.uid;
+    final String currentUserID = "RN9p2uOaTjR3zY2FG4ABf1GIlb83";
 
     return _firebaseDatabase
         .ref('users/$currentUserID/chats')
