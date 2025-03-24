@@ -1,3 +1,4 @@
+import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
 
 abstract class AdminRepo {
@@ -11,4 +12,6 @@ abstract class AdminRepo {
   Future<void> updateInquiry (InquiryVO inquiry);
 
   Future<void> deleteInquiry (int id);
+
+  Future<void> saveCurrentSolution (CurrentSolutionVO currentSolution);
 }

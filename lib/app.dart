@@ -126,7 +126,15 @@ class MyApp extends StatelessWidget {
             create: (context) => DeleteInquiryBloc(adminRepo: adminRepo),
           ),
           BlocProvider<MessageBloc>(
-            create: (context) => MessageBloc(chattingRepo: chattingRepo, userID: base64UrlEncode(values)),
+            create: (context) => MessageBloc(
+                chattingRepo: chattingRepo, userID: base64UrlEncode(values)),
+          ),
+          BlocProvider<AddCurrentSolutionsBloc>(
+            create: (context) => AddCurrentSolutionsBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<UpdateCurrentSolutionsBloc>(
+            create: (context) =>
+                UpdateCurrentSolutionsBloc(adminRepo: adminRepo),
           ),
         ],
         child: MaterialApp.router(

@@ -1,13 +1,18 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:ai_solution/BLoC/current_solutions/current_solutions_bloc.dart';
 import 'package:ai_solution/BLoC/current_solutions/current_solutions_events.dart';
 import 'package:ai_solution/BLoC/current_solutions/current_solutions_states.dart';
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/utils/navigation_extension.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class CurrentSolutionPanel extends StatefulWidget {
   const CurrentSolutionPanel({super.key});
@@ -18,10 +23,21 @@ class CurrentSolutionPanel extends StatefulWidget {
 
 class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
   late final currentSolutionBloc = context.read<CurrentSolutionsBloc>();
+  late final addCurrentSolutionBloc = context.read<AddCurrentSolutionsBloc>();
+  late final updateCurrentSolutionBloc =
+      context.read<UpdateCurrentSolutionsBloc>();
 
   final _nameController = TextEditingController();
   final _bodyController = TextEditingController();
   bool selectAll = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _bodyController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -228,9 +244,9 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
                   ),
                 ],
               ),
-               
+
               Divider(),
-             
+
               Align(
                 alignment: Alignment.topLeft,
                 child: Container(
@@ -242,11 +258,14 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.network(solution.url, fit: BoxFit.cover,),
+                    child: Image.network(
+                      solution.url,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-           
+
               Divider(),
               const Gap(10),
               TextField(
@@ -285,14 +304,49 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
                 ),
               ),
               const Gap(30),
-              Center(
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            WidgetStatePropertyAll(kMessageBubbleColor),
-                        foregroundColor: WidgetStatePropertyAll(kFourthColor)),
-                    onPressed: () {},
-                    child: Text("Update")),
+              BlocConsumer<AddCurrentSolutionsBloc, AddCurrentSolutionStates>(
+                builder: (context, state) {
+                  if (state is AddCurrentSolutionLoading) {
+                    return Center(child: CupertinoActivityIndicator());
+                  } else {
+                    return Center(
+                      child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStatePropertyAll(kMessageBubbleColor),
+                              foregroundColor:
+                                  WidgetStatePropertyAll(kFourthColor)),
+                          onPressed: () {
+                            addCurrentSolutionBloc.add(AddCurrentSolution(
+                                description: _bodyController.text,
+                                name: _nameController.text,
+                                url: solution.url));
+                          },
+                          child: Text("Update")),
+                    );
+                  }
+                },
+                listener: (context, state) {
+                  if (state is AddCurrentSolutionError) {
+                    showTopSnackBar(
+                      Overlay.of(context),
+                      CustomSnackBar.error(
+                        message: state.message,
+                      ),
+                    );
+                  }
+
+                  if (state is CurrentSolutionAdded) {
+                    currentSolutionBloc.add(FetchCurrentSolutions());
+                    context.navigateBack();
+                    showTopSnackBar(
+                      Overlay.of(context),
+                      CustomSnackBar.success(
+                        message: state.message,
+                      ),
+                    );
+                  }
+                },
               )
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
 import 'package:ai_solution/domain/admin_repo.dart';
 import 'package:ai_solution/firebase/firebase_admin_repo.dart';
@@ -139,6 +140,15 @@ class AdminModel implements AdminRepo {
   Future<void> deleteInquiry(int id) async {
     try {
       return await _firebaseAgent.deleteInquiry(id);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> saveCurrentSolution(CurrentSolutionVO currentSolution) async {
+    try {
+      await _firebaseAgent.saveCurrentSolution(currentSolution);
     } on Exception catch (error) {
       return Future.error(error);
     }

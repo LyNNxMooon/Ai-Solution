@@ -16,4 +16,6 @@ class CurrentSolutionVO {
 
   factory CurrentSolutionVO.fromJson(Map<String, dynamic> json) =>
       _$CurrentSolutionVOFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CurrentSolutionVOToJson(this);
 }

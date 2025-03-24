@@ -1,3 +1,4 @@
+import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
 import 'package:ai_solution/domain/admin_repo.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -71,11 +72,24 @@ class FirebaseAdminRepo implements AdminRepo {
       return Future.error(error);
     }
   }
-  
+
   @override
   Future<void> deleteInquiry(int id) {
-     try {
+    try {
       return databaseRef.child("inquries").child(id.toString()).remove();
+    } on FirebaseException catch (error) {
+      //print(error);
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> saveCurrentSolution(CurrentSolutionVO currentSolution) async {
+    try {
+      await databaseRef
+          .child("current_solutions")
+          .child(currentSolution.id.toString())
+          .set(currentSolution.toJson());
     } on FirebaseException catch (error) {
       //print(error);
       return Future.error(error);

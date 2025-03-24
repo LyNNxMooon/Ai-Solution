@@ -17,3 +17,41 @@ class CurrentSolutionsLoaded extends CurrentSolutionsStates {
 
   CurrentSolutionsLoaded(this.currentSolutions);
 }
+
+abstract class AddCurrentSolutionStates{}
+
+class AddCurrentSolutionInitial extends AddCurrentSolutionStates {}
+
+class AddCurrentSolutionLoading extends AddCurrentSolutionStates {}
+
+class AddCurrentSolutionError extends AddCurrentSolutionStates {
+  final String message;
+
+  AddCurrentSolutionError(this.message);
+}
+
+class CurrentSolutionAdded extends AddCurrentSolutionStates {
+
+  final String message;
+
+  CurrentSolutionAdded(this.message);
+}
+
+
+abstract class UpdateCurrentSolutionStates {}
+
+class UpdateCurrentSolutionInitial extends UpdateCurrentSolutionStates {}
+
+class UpdateCurrentSolutionLoading extends UpdateCurrentSolutionStates {}
+
+class UpdateCurrentSolutionError extends UpdateCurrentSolutionStates {
+  final String message;
+
+  UpdateCurrentSolutionError(this.message);
+}
+
+class CurrentSolutionUpdated extends UpdateCurrentSolutionStates {
+  final String message;
+
+  CurrentSolutionUpdated(this.message);
+}
