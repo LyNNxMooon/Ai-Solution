@@ -76,7 +76,7 @@ class UpdateCurrentSolutionsBloc
       emit(UpdateCurrentSolutionLoading());
 
       final CurrentSolutionVO solution = CurrentSolutionVO(
-          id: int.parse(event.id),
+          id: event.id,
           name: event.name,
           url: event.url,
           description: event.description);

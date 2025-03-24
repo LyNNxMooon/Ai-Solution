@@ -12,7 +12,7 @@ class AddCurrentSolution extends CurrentSolutionsEvents {
 }
 
 class UpdateCurrrentSolution extends CurrentSolutionsEvents {
-  final String id;
+  final int id;
   final String name;
   final String url;
   final String description;

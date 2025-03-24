@@ -304,9 +304,9 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
                 ),
               ),
               const Gap(30),
-              BlocConsumer<AddCurrentSolutionsBloc, AddCurrentSolutionStates>(
+              BlocConsumer<UpdateCurrentSolutionsBloc, UpdateCurrentSolutionStates>(
                 builder: (context, state) {
-                  if (state is AddCurrentSolutionLoading) {
+                  if (state is UpdateCurrentSolutionLoading) {
                     return Center(child: CupertinoActivityIndicator());
                   } else {
                     return Center(
@@ -317,7 +317,8 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
                               foregroundColor:
                                   WidgetStatePropertyAll(kFourthColor)),
                           onPressed: () {
-                            addCurrentSolutionBloc.add(AddCurrentSolution(
+                            updateCurrentSolutionBloc.add(UpdateCurrrentSolution(
+                                id: solution.id,
                                 description: _bodyController.text,
                                 name: _nameController.text,
                                 url: solution.url));
@@ -327,7 +328,7 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
                   }
                 },
                 listener: (context, state) {
-                  if (state is AddCurrentSolutionError) {
+                  if (state is UpdateCurrentSolutionError) {
                     showTopSnackBar(
                       Overlay.of(context),
                       CustomSnackBar.error(
@@ -336,7 +337,7 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
                     );
                   }
 
-                  if (state is CurrentSolutionAdded) {
+                  if (state is CurrentSolutionUpdated) {
                     currentSolutionBloc.add(FetchCurrentSolutions());
                     context.navigateBack();
                     showTopSnackBar(
