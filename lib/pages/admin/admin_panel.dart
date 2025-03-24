@@ -5,6 +5,7 @@ import 'package:ai_solution/BLoC/admin_auth/admin_auth_events.dart';
 import 'package:ai_solution/BLoC/admin_auth/admin_auth_states.dart';
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/pages/admin/chatting_panel.dart';
+import 'package:ai_solution/pages/admin/current_solution_panel.dart';
 import 'package:ai_solution/pages/admin/inquiy_panel.dart';
 import 'package:ai_solution/utils/enums.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +33,11 @@ class _AdminPanelState extends State<AdminPanel> {
 
   int _currentIndex = 0;
 
-  List<Widget> adminFeatures = <Widget>[InquiryPanel(), ChattingPanel()];
+  List<Widget> adminFeatures = <Widget>[
+    InquiryPanel(),
+    ChattingPanel(),
+    CurrentSolutionPanel()
+  ];
 
   @override
   void dispose() {
@@ -113,7 +118,11 @@ class _AdminPanelState extends State<AdminPanel> {
                       )),
                   const Gap(30),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _currentIndex = 2;
+                        });
+                      },
                       icon: Icon(
                         Icons.electrical_services_outlined,
                         color: kPrimaryColor,
@@ -168,7 +177,9 @@ class _AdminPanelState extends State<AdminPanel> {
         ? InquiryPanel()
         : _currentIndex == 1
             ? ChattingPanel()
-            : SizedBox();
+            : _currentIndex == 2
+                ? CurrentSolutionPanel()
+                : SizedBox();
   }
 
   Widget otpVerificationUI() {

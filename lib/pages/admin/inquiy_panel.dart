@@ -251,7 +251,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
             isOpenTapped ? openedInquiriesUI() : closedInquiresUI(),
             Container(
               padding: EdgeInsets.only(left: 50, right: 50),
-              //width: double.infinity,
+              width: MediaQuery.of(context).size.width * 1 - ((MediaQuery.of(context).size.width * 0.55) + 290),
               height: MediaQuery.of(context).size.height * 1 - 50,
               child:
                   isOpenTapped ? openedInquiryDetail() : closedInquiryDetail(),

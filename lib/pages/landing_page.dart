@@ -217,14 +217,14 @@ class _LandingPageState extends State<LandingPage> {
             } else if (state is CurrentSolutionsLoaded) {
               return Center(
                   child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 150),
+                      margin: EdgeInsets.symmetric(horizontal: 100),
                       height: 355,
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) => Container(
                                 margin: EdgeInsets.symmetric(vertical: 10),
-                                width: 240,
+                                width: 260,
                                 decoration: BoxDecoration(
                                   color: kBtnGrayColor,
                                   borderRadius: BorderRadius.circular(7),
@@ -277,7 +277,7 @@ class _LandingPageState extends State<LandingPage> {
                                   ],
                                 ),
                               ),
-                          separatorBuilder: (context, index) => const Gap(150),
+                          separatorBuilder: (context, index) => const Gap(140),
                           itemCount: state.currentSolutions.length)));
             } else if (state is CurrentSolutionsError) {
               return Padding(
