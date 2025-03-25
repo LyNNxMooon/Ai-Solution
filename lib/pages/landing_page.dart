@@ -8,7 +8,9 @@ import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_states.da
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/constant/images.dart';
 import 'package:ai_solution/data/vos/client_vo.dart';
+import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/data/vos/previous_solution_vo.dart';
+import 'package:ai_solution/utils/navigation_extension.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,25 +28,21 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
-
   List<ClientVO> clientList = [];
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: [
-        const Gap(100),
-        sliderSession(),
-        const Gap(120),
-        ourClientsSession(context),
-        const Gap(100),
-        currentSolutionSession(context),
-        const Gap(100),
-        previousSolutionSession(context),
-        const Gap(120),
-      ]
-    );
+    return ListView(shrinkWrap: true, children: [
+      const Gap(100),
+      sliderSession(),
+      const Gap(120),
+      ourClientsSession(context),
+      const Gap(100),
+      currentSolutionSession(context),
+      const Gap(100),
+      previousSolutionSession(context),
+      const Gap(120),
+    ]);
   }
 
   Widget cardVideoPlayer(
@@ -88,25 +86,26 @@ class _LandingPageState extends State<LandingPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Image.network(
-                                  (clientList.firstWhere((element) => element.id == previousSolution.clientID)).url,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ),
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            (clientList.firstWhere((element) =>
+                                element.id == previousSolution.clientID)).url,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
                       // BlocBuilder<ClientDetailsBloc, ClientDetailStates>(
                       //   builder: (context, state) {
                       //     if (state is LoadingClientImageByID) {
                       //       return CupertinoActivityIndicator();
                       //     } else if (state is LoadedClientImageByID) {
-                      //       return 
+                      //       return
                       //     } else if (state is ErrorLoadingClientImageByID) {
                       //       return Container(
                       //         width: 40,
@@ -222,59 +221,82 @@ class _LandingPageState extends State<LandingPage> {
                       child: ListView.separated(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) => Container(
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                width: 260,
-                                decoration: BoxDecoration(
-                                  color: kBtnGrayColor,
-                                  borderRadius: BorderRadius.circular(7),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black
-                                          .withOpacity(0.2), // Shadow color
-                                      spreadRadius: 3, // Spread radius
-                                      blurRadius: 4, // Blur radius
-                                      offset: const Offset(
-                                          2, 3), // Offset of the shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(7),
-                                        topRight: Radius.circular(7),
+                          itemBuilder: (context, index) => GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return detailedSolutionWidget(
+                                          state.currentSolutions[index]);
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  width: 260,
+                                  decoration: BoxDecoration(
+                                    color: kBtnGrayColor,
+                                    borderRadius: BorderRadius.circular(7),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black
+                                            .withOpacity(0.2), // Shadow color
+                                        spreadRadius: 3, // Spread radius
+                                        blurRadius: 4, // Blur radius
+                                        offset: const Offset(
+                                            2, 3), // Offset of the shadow
                                       ),
-                                      child: Image.network(
-                                        state.currentSolutions[index].url,
+                                    ],
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: double.infinity,
                                         height: 220,
-                                        fit: BoxFit.fill,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(7),
+                                                topRight: Radius.circular(7))),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(7),
+                                            topRight: Radius.circular(7),
+                                          ),
+                                          child: Image.network(
+                                            state.currentSolutions[index].url,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    const Gap(10),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15),
-                                      child: Text(
-                                        state.currentSolutions[index].name,
-                                        style: TextStyle(
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold),
+                                      const Gap(10),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: Text(
+                                          state.currentSolutions[index].name,
+                                          style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
-                                    ),
-                                    const Gap(15),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15),
-                                      child: Text(
-                                        state.currentSolutions[index]
-                                            .description,
-                                        style: TextStyle(fontSize: 12),
-                                      ),
-                                    )
-                                  ],
+                                      const Gap(15),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: Text(
+                                          state.currentSolutions[index]
+                                                      .description.length >=
+                                                  60
+                                              ? "${state.currentSolutions[index].description.substring(0, 60)} ...."
+                                              : state.currentSolutions[index]
+                                                  .description,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                           separatorBuilder: (context, index) => const Gap(140),
@@ -289,6 +311,77 @@ class _LandingPageState extends State<LandingPage> {
           },
         )
       ],
+    );
+  }
+
+  Widget detailedSolutionWidget(CurrentSolutionVO solution) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.all(1),
+      content: Material(
+        elevation: 8,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 800,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              // Chat Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(solution.name,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      context.navigateBack();
+                    },
+                  ),
+                ],
+              ),
+
+              Divider(),
+
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  width: 300,
+                  height: 300,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      solution.url,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+
+              Divider(),
+              const Gap(10),
+
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                decoration: BoxDecoration(
+                    border: Border.all(width: 0.5),
+                    borderRadius: BorderRadius.circular(7)),
+                child: Text(solution.description),
+              ),
+              const Gap(30)
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -315,7 +408,6 @@ class _LandingPageState extends State<LandingPage> {
               child: CupertinoActivityIndicator(),
             );
           } else if (state is ClientsLoaded) {
-
             clientList = state.clients;
             return SizedBox(
               height: 55,

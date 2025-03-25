@@ -46,9 +46,12 @@ class AddCurrentSolutionsBloc
 
       final CurrentSolutionVO solution = CurrentSolutionVO(
           id: id,
-          name: event.name,
-          url: event.url,
-          description: event.description);
+          name: event.name.isEmpty ? "Default" : event.name,
+          url: event.url.isEmpty
+              ? "https://cdn.cs.1worldsync.com/syndication/mediaserverredirect/9c761667cec1f9964212eb7ef2874bf8/original.png"
+              : event.url,
+          description:
+              event.description.isEmpty ? "...... " : event.description);
 
       await adminRepo.saveCurrentSolution(solution).then(
         (value) {
@@ -77,9 +80,10 @@ class UpdateCurrentSolutionsBloc
 
       final CurrentSolutionVO solution = CurrentSolutionVO(
           id: event.id,
-          name: event.name,
+          name: event.name.isEmpty ? "Default" : event.name,
           url: event.url,
-          description: event.description);
+          description:
+              event.description.isEmpty ? "...... " : event.description);
 
       await adminRepo.saveCurrentSolution(solution).then(
         (value) {
