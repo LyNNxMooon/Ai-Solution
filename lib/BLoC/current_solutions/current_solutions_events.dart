@@ -23,3 +23,9 @@ class UpdateCurrrentSolution extends CurrentSolutionsEvents {
       required this.name,
       required this.url});
 }
+
+class DeleteCurrentSolution extends CurrentSolutionsEvents {
+  final int id;
+
+  DeleteCurrentSolution({required this.id});
+}

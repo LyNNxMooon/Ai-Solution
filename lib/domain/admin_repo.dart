@@ -14,4 +14,6 @@ abstract class AdminRepo {
   Future<void> deleteInquiry (int id);
 
   Future<void> saveCurrentSolution (CurrentSolutionVO currentSolution);
+
+  Future<void> deleteCurrentSolution (int id);
 }

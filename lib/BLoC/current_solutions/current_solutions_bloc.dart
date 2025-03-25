@@ -96,3 +96,29 @@ class UpdateCurrentSolutionsBloc
     }
   }
 }
+
+class DeleteCurrentSolutionsBloc
+    extends Bloc<CurrentSolutionsEvents, DeleteCurrentSolutionStates> {
+  final AdminRepo adminRepo;
+
+  DeleteCurrentSolutionsBloc({required this.adminRepo})
+      : super(DeleteCurrentSolutionInitial()) {
+    on<DeleteCurrentSolution>(_onDeleteCurrentSolution);
+  }
+
+  Future _onDeleteCurrentSolution(DeleteCurrentSolution event,
+      Emitter<DeleteCurrentSolutionStates> emit) async {
+    try {
+      emit(DeleteCurrentSolutionInitial());
+
+      await adminRepo.deleteCurrentSolution(event.id).then(
+        (value) {
+          emit(
+              CurrentSolutionDeleted("Current Solution deleted successfully!"));
+        },
+      );
+    } catch (error) {
+      emit(DeleteCurrentSolutionError('$error'));
+    }
+  }
+}

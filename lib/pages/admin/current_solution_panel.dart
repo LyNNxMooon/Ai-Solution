@@ -6,6 +6,7 @@ import 'package:ai_solution/BLoC/current_solutions/current_solutions_states.dart
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/utils/navigation_extension.dart';
+import 'package:ai_solution/widgets/confirmation_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +27,8 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
   late final addCurrentSolutionBloc = context.read<AddCurrentSolutionsBloc>();
   late final updateCurrentSolutionBloc =
       context.read<UpdateCurrentSolutionsBloc>();
+  late final deleteCurrentSolutionBloc =
+      context.read<DeleteCurrentSolutionsBloc>();
 
   final _nameController = TextEditingController();
   final _bodyController = TextEditingController();
@@ -261,7 +264,7 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
         borderRadius: BorderRadius.circular(12),
         child: Container(
           width: 600,
-          height: 650,
+          height: 665,
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Colors.white,
@@ -344,53 +347,118 @@ class _CurrentSolutionPanelState extends State<CurrentSolutionPanel> {
                 ),
               ),
               const Gap(30),
-              BlocConsumer<UpdateCurrentSolutionsBloc,
-                  UpdateCurrentSolutionStates>(
-                builder: (context, state) {
-                  if (state is UpdateCurrentSolutionLoading) {
-                    return Center(child: CupertinoActivityIndicator());
-                  } else {
-                    return Center(
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  WidgetStatePropertyAll(kMessageBubbleColor),
-                              foregroundColor:
-                                  WidgetStatePropertyAll(kFourthColor)),
-                          onPressed: () {
-                            updateCurrentSolutionBloc.add(
-                                UpdateCurrrentSolution(
-                                    id: solution.id,
-                                    description: _bodyController.text,
-                                    name: _nameController.text,
-                                    url: solution.url));
-                          },
-                          child: Text("Update")),
-                    );
-                  }
-                },
-                listener: (context, state) {
-                  if (state is UpdateCurrentSolutionError) {
-                    showTopSnackBar(
-                      Overlay.of(context),
-                      CustomSnackBar.error(
-                        message: state.message,
-                      ),
-                    );
-                  }
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  BlocConsumer<UpdateCurrentSolutionsBloc,
+                      UpdateCurrentSolutionStates>(
+                    builder: (context, state) {
+                      if (state is UpdateCurrentSolutionLoading) {
+                        return Center(child: CupertinoActivityIndicator());
+                      } else {
+                        return Center(
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                      kMessageBubbleColor),
+                                  foregroundColor:
+                                      WidgetStatePropertyAll(kFourthColor)),
+                              onPressed: () {
+                                updateCurrentSolutionBloc.add(
+                                    UpdateCurrrentSolution(
+                                        id: solution.id,
+                                        description: _bodyController.text,
+                                        name: _nameController.text,
+                                        url: solution.url));
+                              },
+                              child: Text("Update")),
+                        );
+                      }
+                    },
+                    listener: (context, state) {
+                      if (state is UpdateCurrentSolutionError) {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.error(
+                            message: state.message,
+                          ),
+                        );
+                      }
 
-                  if (state is CurrentSolutionUpdated) {
-                    currentSolutionBloc.add(FetchCurrentSolutions());
-                    context.navigateBack();
-                    showTopSnackBar(
-                      Overlay.of(context),
-                      CustomSnackBar.success(
-                        message: state.message,
-                      ),
-                    );
-                  }
-                },
-              )
+                      if (state is CurrentSolutionUpdated) {
+                        currentSolutionBloc.add(FetchCurrentSolutions());
+                        context.navigateBack();
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.success(
+                            message: state.message,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                  const Gap(40),
+                  BlocConsumer<DeleteCurrentSolutionsBloc,
+                      DeleteCurrentSolutionStates>(
+                    builder: (context, state) {
+                      if (state is DeleteeCurrentSolutionLoading) {
+                        return Center(child: CupertinoActivityIndicator());
+                      } else {
+                        return Center(
+                          child: ElevatedButton(
+                              style: ButtonStyle(
+                                  backgroundColor:
+                                      WidgetStatePropertyAll(Colors.red),
+                                  foregroundColor:
+                                      WidgetStatePropertyAll(kFourthColor)),
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => ConfirmationWidget(
+                                    message:
+                                        "Are you sure to delete this current solution forever?",
+                                    function: () {
+                                      deleteCurrentSolutionBloc
+                                          .add(DeleteCurrentSolution(
+                                        id: solution.id,
+                                      ));
+                                    },
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Delete",
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        );
+                      }
+                    },
+                    listener: (context, state) {
+                      if (state is DeleteCurrentSolutionError) {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.error(
+                            message: state.message,
+                          ),
+                        );
+                      }
+
+                      if (state is CurrentSolutionDeleted) {
+                        currentSolutionBloc.add(FetchCurrentSolutions());
+                        context.navigateBack();
+                        context.navigateBack();
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.success(
+                            message: state.message,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+              const Gap(20)
             ],
           ),
         ),

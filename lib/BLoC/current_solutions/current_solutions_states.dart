@@ -18,7 +18,7 @@ class CurrentSolutionsLoaded extends CurrentSolutionsStates {
   CurrentSolutionsLoaded(this.currentSolutions);
 }
 
-abstract class AddCurrentSolutionStates{}
+abstract class AddCurrentSolutionStates {}
 
 class AddCurrentSolutionInitial extends AddCurrentSolutionStates {}
 
@@ -31,12 +31,10 @@ class AddCurrentSolutionError extends AddCurrentSolutionStates {
 }
 
 class CurrentSolutionAdded extends AddCurrentSolutionStates {
-
   final String message;
 
   CurrentSolutionAdded(this.message);
 }
-
 
 abstract class UpdateCurrentSolutionStates {}
 
@@ -54,4 +52,22 @@ class CurrentSolutionUpdated extends UpdateCurrentSolutionStates {
   final String message;
 
   CurrentSolutionUpdated(this.message);
+}
+
+abstract class DeleteCurrentSolutionStates {}
+
+class DeleteCurrentSolutionInitial extends DeleteCurrentSolutionStates {}
+
+class DeleteeCurrentSolutionLoading extends DeleteCurrentSolutionStates {}
+
+class DeleteCurrentSolutionError extends DeleteCurrentSolutionStates {
+  final String message;
+
+  DeleteCurrentSolutionError(this.message);
+}
+
+class CurrentSolutionDeleted extends DeleteCurrentSolutionStates {
+  final String message;
+
+  CurrentSolutionDeleted(this.message);
 }

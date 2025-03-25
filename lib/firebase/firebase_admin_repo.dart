@@ -74,9 +74,9 @@ class FirebaseAdminRepo implements AdminRepo {
   }
 
   @override
-  Future<void> deleteInquiry(int id) {
+  Future<void> deleteInquiry(int id) async {
     try {
-      return databaseRef.child("inquries").child(id.toString()).remove();
+      await databaseRef.child("inquries").child(id.toString()).remove();
     } on FirebaseException catch (error) {
       //print(error);
       return Future.error(error);
@@ -90,6 +90,19 @@ class FirebaseAdminRepo implements AdminRepo {
           .child("current_solutions")
           .child(currentSolution.id.toString())
           .set(currentSolution.toJson());
+    } on FirebaseException catch (error) {
+      //print(error);
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> deleteCurrentSolution(int id) async {
+    try {
+      await databaseRef
+          .child("current_solutions")
+          .child(id.toString())
+          .remove();
     } on FirebaseException catch (error) {
       //print(error);
       return Future.error(error);

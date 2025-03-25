@@ -136,6 +136,10 @@ class MyApp extends StatelessWidget {
             create: (context) =>
                 UpdateCurrentSolutionsBloc(adminRepo: adminRepo),
           ),
+          BlocProvider<DeleteCurrentSolutionsBloc>(
+            create: (context) =>
+                DeleteCurrentSolutionsBloc(adminRepo: adminRepo),
+          ),
         ],
         child: MaterialApp.router(
           theme: ThemeData(fontFamily: "InterTight"),

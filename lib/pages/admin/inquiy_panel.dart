@@ -3,6 +3,8 @@ import 'package:ai_solution/BLoC/inquiry/inquiry_events.dart';
 import 'package:ai_solution/BLoC/inquiry/inquiry_states.dart';
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
+import 'package:ai_solution/utils/navigation_extension.dart';
+import 'package:ai_solution/widgets/confirmation_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -185,8 +187,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
                     endIndent: 10,
                   ),
                   ListTile(
-                    tileColor:
-                        isOpenTapped ? Colors.black12 : kPrimaryColor,
+                    tileColor: isOpenTapped ? Colors.black12 : kPrimaryColor,
                     onTap: () {
                       setState(() {
                         isOpenTapped = true;
@@ -215,8 +216,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
                     //contentPadding: EdgeInsets.all(0),
                   ),
                   ListTile(
-                    tileColor:
-                        !isOpenTapped ? Colors.black12 : kPrimaryColor,
+                    tileColor: !isOpenTapped ? Colors.black12 : kPrimaryColor,
                     onTap: () {
                       setState(() {
                         isOpenTapped = false;
@@ -251,7 +251,8 @@ class _InquiryPanelState extends State<InquiryPanel> {
             isOpenTapped ? openedInquiriesUI() : closedInquiresUI(),
             Container(
               padding: EdgeInsets.only(left: 50, right: 50),
-              width: MediaQuery.of(context).size.width * 1 - ((MediaQuery.of(context).size.width * 0.55) + 290),
+              width: MediaQuery.of(context).size.width * 1 -
+                  ((MediaQuery.of(context).size.width * 0.55) + 290),
               height: MediaQuery.of(context).size.height * 1 - 50,
               child:
                   isOpenTapped ? openedInquiryDetail() : closedInquiryDetail(),
@@ -352,7 +353,16 @@ class _InquiryPanelState extends State<InquiryPanel> {
                     ),
                   );
                 } else {
-                  inquiryDeleteBloc.add(DeleteInquiry(id: closedInquiry!.id));
+                  showDialog(
+                    context: context,
+                    builder: (context) => ConfirmationWidget(
+                      message: "Are you sure to delete this inquiry forever?",
+                      function: () {
+                        inquiryDeleteBloc
+                            .add(DeleteInquiry(id: closedInquiry!.id));
+                      },
+                    ),
+                  );
                 }
               },
               child: Container(
@@ -381,6 +391,7 @@ class _InquiryPanelState extends State<InquiryPanel> {
         },
         listener: (context, state) {
           if (state is InquiryDeleted) {
+            context.navigateBack();
             setState(() {
               closedInquiry = null;
             });
