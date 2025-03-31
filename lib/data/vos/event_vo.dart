@@ -16,4 +16,6 @@ class EventVO {
 
   factory EventVO.fromJson(Map<String, dynamic> json) =>
       _$EventVOFromJson(json);
+
+  Map<String, dynamic> toJson () => _$EventVOToJson(this);
 }

@@ -10,6 +10,7 @@ import 'package:ai_solution/BLoC/current_solutions/current_solutions_events.dart
 import 'package:ai_solution/BLoC/events/events_bloc.dart';
 import 'package:ai_solution/BLoC/events/events_events.dart';
 import 'package:ai_solution/BLoC/feedback/feedback_bloc.dart';
+import 'package:ai_solution/BLoC/feedback/feedback_events.dart';
 import 'package:ai_solution/BLoC/gallery/gallery_bloc.dart';
 import 'package:ai_solution/BLoC/gallery/gallery_events.dart';
 import 'package:ai_solution/BLoC/inquiry/inquiry_bloc.dart';
@@ -139,6 +140,45 @@ class MyApp extends StatelessWidget {
           BlocProvider<DeleteCurrentSolutionsBloc>(
             create: (context) =>
                 DeleteCurrentSolutionsBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<AddPreviousSolutionsBloc>(
+            create: (context) => AddPreviousSolutionsBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<UpdatePreviousSolutionsBloc>(
+            create: (context) =>
+                UpdatePreviousSolutionsBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<DeletePreviousSolutionsBloc>(
+            create: (context) =>
+                DeletePreviousSolutionsBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<AddGallerysBloc>(
+            create: (context) => AddGallerysBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<UpdateGallerysBloc>(
+            create: (context) => UpdateGallerysBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<DeleteGallerysBloc>(
+            create: (context) => DeleteGallerysBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<AddUpcomingEventssBloc>(
+            create: (context) => AddUpcomingEventssBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<UpdateUpcomingEventssBloc>(
+            create: (context) =>
+                UpdateUpcomingEventssBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<DeleteUpcomingEventssBloc>(
+            create: (context) =>
+                DeleteUpcomingEventssBloc(adminRepo: adminRepo),
+          ),
+          BlocProvider<FeedbackFetchingBloc>(
+            create: (context) => FeedbackFetchingBloc(adminRepo: adminRepo)
+              ..add(FetchFeedbacks()),
+          ),
+          BlocProvider<RatingFetchingBloc>(
+            create: (context) =>
+                RatingFetchingBloc(adminRepo: adminRepo)..add(FetchRatings()),
           ),
         ],
         child: MaterialApp.router(

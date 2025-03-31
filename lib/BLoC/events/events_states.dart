@@ -37,3 +37,58 @@ class PromotionalEventsLoaded extends PromotionalEventsStates {
 
   PromotionalEventsLoaded(this.promotionalEvents);
 }
+
+
+abstract class AddUpcomingEventsStates {}
+
+class AddUpcomingEventsInitial extends AddUpcomingEventsStates {}
+
+class AddUpcomingEventsLoading extends AddUpcomingEventsStates {}
+
+class AddUpcomingEventsError extends AddUpcomingEventsStates {
+  final String message;
+
+  AddUpcomingEventsError(this.message);
+}
+
+class UpcomingEventsAdded extends AddUpcomingEventsStates {
+  final String message;
+
+  UpcomingEventsAdded(this.message);
+}
+
+abstract class UpdateUpcomingEventsStates {}
+
+class UpdateUpcomingEventsInitial extends UpdateUpcomingEventsStates {}
+
+class UpdateUpcomingEventsLoading extends UpdateUpcomingEventsStates {}
+
+class UpdateUpcomingEventsError extends UpdateUpcomingEventsStates {
+  final String message;
+
+  UpdateUpcomingEventsError(this.message);
+}
+
+class UpcomingEventsUpdated extends UpdateUpcomingEventsStates {
+  final String message;
+
+  UpcomingEventsUpdated(this.message);
+}
+
+abstract class DeleteUpcomingEventsStates {}
+
+class DeleteUpcomingEventsInitial extends DeleteUpcomingEventsStates {}
+
+class DeleteeCurrentSolutionLoading extends DeleteUpcomingEventsStates {}
+
+class DeleteUpcomingEventsError extends DeleteUpcomingEventsStates {
+  final String message;
+
+  DeleteUpcomingEventsError(this.message);
+}
+
+class UpcomingEventsDeleted extends DeleteUpcomingEventsStates {
+  final String message;
+
+  UpcomingEventsDeleted(this.message);
+}

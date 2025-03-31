@@ -11,3 +11,8 @@ class SubmitFeedbackAndRating extends FeedbackAndRatingEvents {
     required this.rate,
   });
 }
+
+
+class FetchFeedbacks extends FeedbackAndRatingEvents {}
+
+class FetchRatings extends FeedbackAndRatingEvents {}

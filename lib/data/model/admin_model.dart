@@ -1,5 +1,10 @@
 import 'package:ai_solution/data/vos/current_solution_vo.dart';
+import 'package:ai_solution/data/vos/event_vo.dart';
+import 'package:ai_solution/data/vos/feedback_vo.dart';
+import 'package:ai_solution/data/vos/gallery_vo.dart';
 import 'package:ai_solution/data/vos/inquiry_vo.dart';
+import 'package:ai_solution/data/vos/previous_solution_vo.dart';
+import 'package:ai_solution/data/vos/rating_vo.dart';
 import 'package:ai_solution/domain/admin_repo.dart';
 import 'package:ai_solution/firebase/firebase_admin_repo.dart';
 
@@ -153,11 +158,83 @@ class AdminModel implements AdminRepo {
       return Future.error(error);
     }
   }
-  
+
   @override
   Future<void> deleteCurrentSolution(int id) async {
     try {
-       await _firebaseAgent.deleteCurrentSolution(id);
+      await _firebaseAgent.deleteCurrentSolution(id);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> deletePreviousSolution(int id) async {
+    try {
+      await _firebaseAgent.deletePreviousSolution(id);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<List<FeedbackVO>> fetchAllFeedbacks() async {
+    try {
+      return await _firebaseAgent.fetchAllFeedbacks();
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<List<RatingVO>> fetchAllRatings() async {
+    try {
+      return await _firebaseAgent.fetchAllRatings();
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> savePreviousSolution(PreviousSolutionVO previousSolution) async {
+    try {
+      await _firebaseAgent.savePreviousSolution(previousSolution);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> deleteGallery(int id) async {
+    try {
+      return await _firebaseAgent.deleteGallery(id);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> deleteUpcomingEvent(int id) async {
+    try {
+      return await _firebaseAgent.deleteUpcomingEvent(id);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> saveGallery(GalleryVO gallery) async {
+    try {
+      await _firebaseAgent.saveGallery(gallery);
+    } on Exception catch (error) {
+      return Future.error(error);
+    }
+  }
+
+  @override
+  Future<void> saveUpcomingEvent(EventVO upcomingEvent) async {
+    try {
+      await _firebaseAgent.saveUpcomingEvent(upcomingEvent);
     } on Exception catch (error) {
       return Future.error(error);
     }

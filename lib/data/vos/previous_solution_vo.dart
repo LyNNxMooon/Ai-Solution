@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 part 'previous_solution_vo.g.dart';
 
@@ -18,6 +17,8 @@ class PreviousSolutionVO {
       required this.description,
       required this.clientID});
 
-       factory PreviousSolutionVO.fromJson(Map<String, dynamic> json) =>
+  factory PreviousSolutionVO.fromJson(Map<String, dynamic> json) =>
       _$PreviousSolutionVOFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PreviousSolutionVOToJson(this);
 }

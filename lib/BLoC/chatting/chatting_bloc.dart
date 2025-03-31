@@ -16,8 +16,8 @@ class MessageBloc extends Bloc<ChattingEvents, MessagingStates> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   String getAdminUserId() {
-    //return _firebaseAuth.currentUser?.uid ?? "";
-    return "RN9p2uOaTjR3zY2FG4ABf1GIlb83";
+    return _firebaseAuth.currentUser?.uid ?? "";
+// return "RN9p2uOaTjR3zY2FG4ABf1GIlb83";
   }
 
   MessageBloc({required this.chattingRepo, required this.userID})
@@ -52,7 +52,8 @@ class MessageBloc extends Bloc<ChattingEvents, MessagingStates> {
   Future<void> _onSendMessageByAdmin(
       SendMessageByAdmin event, Emitter<MessagingStates> emit) async {
     try {
-      await chattingRepo.sendMessagesByAdmin(event.receiverID, getAdminUserId(), event.message);
+      await chattingRepo.sendMessagesByAdmin(
+          event.receiverID, getAdminUserId(), event.message);
     } catch (error) {
       emit(SentMessageError("$error"));
     }

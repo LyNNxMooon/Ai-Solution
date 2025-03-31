@@ -16,4 +16,6 @@ class GalleryVO {
 
   factory GalleryVO.fromJson(Map<String, dynamic> json) =>
       _$GalleryVOFromJson(json);
+
+  Map<String , dynamic> toJson() => _$GalleryVOToJson(this);
 }

@@ -2,6 +2,7 @@ import 'package:ai_solution/BLoC/feedback/feedback_events.dart';
 import 'package:ai_solution/BLoC/feedback/feeeback_states.dart';
 import 'package:ai_solution/data/vos/feedback_vo.dart';
 import 'package:ai_solution/data/vos/rating_vo.dart';
+import 'package:ai_solution/domain/admin_repo.dart';
 import 'package:ai_solution/domain/feedback_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,6 +38,47 @@ class FeedbackAndRatingBloc
       }
     } catch (error) {
       emit(FeedbackAndRatingError('$error'));
+    }
+  }
+}
+
+class FeedbackFetchingBloc
+    extends Bloc<FeedbackAndRatingEvents, FeedbackStates> {
+  final AdminRepo adminRepo;
+
+  FeedbackFetchingBloc({required this.adminRepo}) : super(FeedbackInitial()) {
+    on<FetchFeedbacks>(_onFetchFeedbacks);
+  }
+
+  Future _onFetchFeedbacks(
+      FeedbackAndRatingEvents event, Emitter<FeedbackStates> emit) async {
+    try {
+      emit(FeedbackLoading());
+      final fetchedFeedbacks = await adminRepo.fetchAllFeedbacks();
+
+      emit(FeedbackLoaded(fetchedFeedbacks));
+    } catch (error) {
+      emit(FeedbackError('$error'));
+    }
+  }
+}
+
+class RatingFetchingBloc extends Bloc<FeedbackAndRatingEvents, RatingStates> {
+  final AdminRepo adminRepo;
+
+  RatingFetchingBloc({required this.adminRepo}) : super(RatingInitial()) {
+    on<FetchRatings>(_onFetchRatings);
+  }
+
+  Future _onFetchRatings(
+      FeedbackAndRatingEvents event, Emitter<RatingStates> emit) async {
+    try {
+      emit(RatingLoading());
+      final fetchedRatings = await adminRepo.fetchAllRatings();
+
+      emit(RatingLoaded(fetchedRatings));
+    } catch (error) {
+      emit(RatingError('$error'));
     }
   }
 }
