@@ -6,7 +6,12 @@ import 'package:ai_solution/BLoC/admin_auth/admin_auth_states.dart';
 import 'package:ai_solution/constant/colors.dart';
 import 'package:ai_solution/pages/admin/chatting_panel.dart';
 import 'package:ai_solution/pages/admin/current_solution_panel.dart';
+import 'package:ai_solution/pages/admin/feedback_and_rating_panel.dart';
+import 'package:ai_solution/pages/admin/gallery_panel.dart';
 import 'package:ai_solution/pages/admin/inquiy_panel.dart';
+import 'package:ai_solution/pages/admin/previous_solution_panel.dart';
+import 'package:ai_solution/pages/admin/promo_events_panel.dart';
+import 'package:ai_solution/pages/admin/upcoming_events_panel.dart';
 import 'package:ai_solution/utils/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,12 +37,6 @@ class _AdminPanelState extends State<AdminPanel> {
   late final adminAuthBloc = context.read<AdminAuthBloc>();
 
   int _currentIndex = 0;
-
-  List<Widget> adminFeatures = <Widget>[
-    InquiryPanel(),
-    ChattingPanel(),
-    CurrentSolutionPanel()
-  ];
 
   @override
   void dispose() {
@@ -129,35 +128,55 @@ class _AdminPanelState extends State<AdminPanel> {
                       )),
                   const Gap(30),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _currentIndex = 3;
+                        });
+                      },
                       icon: Icon(
                         Icons.work_history_outlined,
                         color: kPrimaryColor,
                       )),
                   const Gap(30),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _currentIndex = 4;
+                        });
+                      },
                       icon: Icon(
                         Icons.event_available_outlined,
                         color: kPrimaryColor,
                       )),
                   const Gap(30),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _currentIndex = 5;
+                        });
+                      },
                       icon: Icon(
                         Icons.houseboat_rounded,
                         color: kPrimaryColor,
                       )),
                   const Gap(30),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _currentIndex = 6;
+                        });
+                      },
                       icon: Icon(
                         Icons.photo,
                         color: kPrimaryColor,
                       )),
                   const Gap(30),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _currentIndex = 7;
+                        });
+                      },
                       icon: Icon(
                         Icons.feedback_rounded,
                         color: kPrimaryColor,
@@ -179,7 +198,17 @@ class _AdminPanelState extends State<AdminPanel> {
             ? ChattingPanel()
             : _currentIndex == 2
                 ? CurrentSolutionPanel()
-                : SizedBox();
+                : _currentIndex == 3
+                    ? PreviousSolutionPanel()
+                    : _currentIndex == 4
+                        ? UpcomingEventsPanel()
+                        : _currentIndex == 5
+                            ? PromoEventsPanel()
+                            : _currentIndex == 6
+                                ? GalleryPanel()
+                                : _currentIndex == 7
+                                    ? FeedbackAndRatingPanel()
+                                    : SizedBox();
   }
 
   Widget otpVerificationUI() {

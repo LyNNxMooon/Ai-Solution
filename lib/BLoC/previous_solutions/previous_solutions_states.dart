@@ -58,7 +58,7 @@ abstract class DeletePreviousSolutionStates {}
 
 class DeletePreviousSolutionInitial extends DeletePreviousSolutionStates {}
 
-class DeleteeCurrentSolutionLoading extends DeletePreviousSolutionStates {}
+class DeletePreviousSolutionLoading extends DeletePreviousSolutionStates {}
 
 class DeletePreviousSolutionError extends DeletePreviousSolutionStates {
   final String message;

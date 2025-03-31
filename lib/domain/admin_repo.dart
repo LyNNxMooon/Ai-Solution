@@ -1,3 +1,4 @@
+import 'package:ai_solution/data/vos/client_vo.dart';
 import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/data/vos/event_vo.dart';
 import 'package:ai_solution/data/vos/feedback_vo.dart';
@@ -26,7 +27,7 @@ abstract class AdminRepo {
 
   // Previous Solutions CUD
 
-  Future<void> savePreviousSolution(PreviousSolutionVO previousSolution);
+  Future<void> savePreviousSolution(PreviousSolutionVO previousSolution, ClientVO client);
 
   Future<void> deletePreviousSolution(int id);
 

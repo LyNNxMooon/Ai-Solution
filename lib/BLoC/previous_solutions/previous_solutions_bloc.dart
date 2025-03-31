@@ -1,5 +1,6 @@
 import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_events.dart';
 import 'package:ai_solution/BLoC/previous_solutions/previous_solutions_states.dart';
+import 'package:ai_solution/data/vos/client_vo.dart';
 import 'package:ai_solution/data/vos/previous_solution_vo.dart';
 import 'package:ai_solution/domain/admin_repo.dart';
 import 'package:ai_solution/domain/landing_repo.dart';
@@ -54,7 +55,10 @@ class AddPreviousSolutionsBloc
               event.description.isEmpty ? "...... " : event.description,
           clientID: id);
 
-      await adminRepo.savePreviousSolution(solution).then(
+      final ClientVO client =
+          ClientVO(id: id, name: event.clientName, url: event.clientLogo);
+
+      await adminRepo.savePreviousSolution(solution, client).then(
         (value) {
           emit(PreviousSolutionAdded("Previous Solution added successfully!"));
         },
@@ -87,7 +91,9 @@ class UpdatePreviousSolutionsBloc
               event.description.isEmpty ? "...... " : event.description,
           clientID: event.id);
 
-      await adminRepo.savePreviousSolution(solution).then(
+      final ClientVO temp = ClientVO(id: 100, name: "temp", url: "-");
+
+      await adminRepo.savePreviousSolution(solution, temp).then(
         (value) {
           emit(PreviousSolutionUpdated(
               "Previous Solution updated successfully!"));
@@ -111,7 +117,7 @@ class DeletePreviousSolutionsBloc
   Future _onDeletePreviousSolution(DeletePreviousSolution event,
       Emitter<DeletePreviousSolutionStates> emit) async {
     try {
-      emit(DeletePreviousSolutionInitial());
+      emit(DeletePreviousSolutionLoading());
 
       await adminRepo.deletePreviousSolution(event.id).then(
         (value) {

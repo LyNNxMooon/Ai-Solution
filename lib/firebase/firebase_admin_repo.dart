@@ -1,3 +1,4 @@
+import 'package:ai_solution/data/vos/client_vo.dart';
 import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/data/vos/event_vo.dart';
 import 'package:ai_solution/data/vos/feedback_vo.dart';
@@ -154,12 +155,17 @@ class FirebaseAdminRepo implements AdminRepo {
   }
 
   @override
-  Future<void> savePreviousSolution(PreviousSolutionVO previousSolution) async {
+  Future<void> savePreviousSolution(
+      PreviousSolutionVO previousSolution, ClientVO clientVO) async {
     try {
       await databaseRef
           .child("previous_solutions")
           .child(previousSolution.id.toString())
           .set(previousSolution.toJson());
+      await databaseRef
+          .child("clients")
+          .child(clientVO.id.toString())
+          .set(clientVO.toJson());
     } on FirebaseException catch (error) {
       //print(error);
       return Future.error(error);

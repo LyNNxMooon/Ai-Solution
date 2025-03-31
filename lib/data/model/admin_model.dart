@@ -1,3 +1,4 @@
+import 'package:ai_solution/data/vos/client_vo.dart';
 import 'package:ai_solution/data/vos/current_solution_vo.dart';
 import 'package:ai_solution/data/vos/event_vo.dart';
 import 'package:ai_solution/data/vos/feedback_vo.dart';
@@ -196,9 +197,9 @@ class AdminModel implements AdminRepo {
   }
 
   @override
-  Future<void> savePreviousSolution(PreviousSolutionVO previousSolution) async {
+  Future<void> savePreviousSolution(PreviousSolutionVO previousSolution, ClientVO client) async {
     try {
-      await _firebaseAgent.savePreviousSolution(previousSolution);
+      await _firebaseAgent.savePreviousSolution(previousSolution, client);
     } on Exception catch (error) {
       return Future.error(error);
     }
