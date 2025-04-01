@@ -82,56 +82,82 @@ class _AboutPageState extends State<AboutPage> {
           padding: EdgeInsets.symmetric(horizontal: 120),
           child: Center(
             child: SizedBox(
-              height: 50,
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Container(
-                        width: 130,
-                        // decoration: BoxDecoration(
-                        //     border: Border.all(width: 1),
-                        //     borderRadius: BorderRadius.circular(5)),
-                        decoration: BoxDecoration(
-                          //border: Border.all(width: 1),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  Colors.black.withOpacity(0.2), // Shadow color
-                              spreadRadius: 3, // Spread radius
-                              blurRadius: 4, // Blur radius
-                              offset:
-                                  const Offset(2, 3), // Offset of the shadow
-                            ),
-                          ],
+                height: 52,
+                child: BlocBuilder<RatingFetchingBloc, RatingStates>(
+                  builder: (context, state) {
+                    if (state is RatingLoading) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 50),
+                        child: Center(
+                          child: CupertinoActivityIndicator(),
                         ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.star,
-                              color: kRateColor,
-                              size: 30,
-                            ),
-                            const Gap(10),
-                            Text(
-                              "x",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            const Gap(10),
-                            Text(
-                              "5",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.w300),
-                            )
-                          ],
-                        ),
-                      ),
-                  separatorBuilder: (context, index) => const Gap(40),
-                  itemCount: 8),
-            ),
+                      );
+                    } else if (state is RatingLoaded) {
+                      return ListView.separated(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => Container(
+                                margin: EdgeInsets.symmetric(vertical: 5),
+                                width: 170,
+                                // decoration: BoxDecoration(
+                                //     border: Border.all(width: 1),
+                                //     borderRadius: BorderRadius.circular(5)),
+                                decoration: BoxDecoration(
+                                  //border: Border.all(width: 0.2),
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black
+                                          .withOpacity(0.2), // Shadow color
+                                      spreadRadius: 3, // Spread radius
+                                      blurRadius: 4, // Blur radius
+                                      offset: const Offset(
+                                          2, 3), // Offset of the shadow
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: Image.network(
+                                        "https://th.bing.com/th/id/OIP.Ii15573m21uyos5SZQTdrAHaHa?rs=1&pid=ImgDetMain",
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    const Gap(15),
+                                    Icon(
+                                      Icons.star,
+                                      color: kRateColor,
+                                      size: 30,
+                                    ),
+                                    const Gap(10),
+                                    Text(
+                                      "x",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const Gap(10),
+                                    Text(
+                                      state.rating[index].rate.toString(),
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w300),
+                                    )
+                                  ],
+                                ),
+                              ),
+                          separatorBuilder: (context, index) => const Gap(40),
+                          itemCount: state.rating.length);
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                )),
           ),
         ),
         const Gap(100),
@@ -356,37 +382,54 @@ class _AboutPageState extends State<AboutPage> {
           const Gap(120),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.5,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 60,
-                crossAxisSpacing: 120,
-                mainAxisExtent: 200,
-              ),
-              itemBuilder: (context, index) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Sample Feedback",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const Gap(20),
-                  Text(
-                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummyLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"),
-                  const Gap(30),
-                  ElevatedButton(
-                      onPressed: () {},
-                      style: ButtonStyle(
-                          side: WidgetStatePropertyAll(
-                              BorderSide(width: 1, color: kFourthColor)),
-                          backgroundColor: WidgetStatePropertyAll(Colors.white),
-                          foregroundColor:
-                              WidgetStatePropertyAll(kFourthColor)),
-                      child: Text("Learn More"))
-                ],
-              ),
-              itemCount: 4,
+            child: BlocBuilder<FeedbackFetchingBloc, FeedbackStates>(
+              builder: (context, state) {
+                if (state is FeedbackLoading) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 80),
+                    child: Center(
+                      child: CupertinoActivityIndicator(),
+                    ),
+                  );
+                } else if (state is FeedbackLoaded) {
+                  return GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 60,
+                      crossAxisSpacing: 120,
+                      mainAxisExtent: 200,
+                    ),
+                    itemBuilder: (context, index) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          state.feedback[index].name,
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        const Gap(20),
+                        Text(state.feedback[index].body),
+                        const Gap(30),
+                        ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(
+                                side: WidgetStatePropertyAll(
+                                    BorderSide(width: 1, color: kFourthColor)),
+                                backgroundColor:
+                                    WidgetStatePropertyAll(Colors.white),
+                                foregroundColor:
+                                    WidgetStatePropertyAll(kFourthColor)),
+                            child: Text("Learn More"))
+                      ],
+                    ),
+                    itemCount: state.feedback.length,
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
             ),
           )
         ],

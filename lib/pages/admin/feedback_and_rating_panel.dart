@@ -126,8 +126,9 @@ class _FeedbackAndRatingPanelState extends State<FeedbackAndRatingPanel> {
                         itemBuilder: (context, index) => GestureDetector(
                           onTap: () {},
                           child: Container(
+                            margin: EdgeInsets.symmetric(vertical: 3),
                             padding: EdgeInsets.all(5),
-                            height: 250,
+                            height: 256,
                             width: 200,
                             decoration: BoxDecoration(
                                 color: Colors.white,
