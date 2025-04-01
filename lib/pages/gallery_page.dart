@@ -65,7 +65,7 @@ class _GalleryPageState extends State<GalleryPage> {
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.3,
           child: Text(
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dumm Lorem Ipsum is simply",
+            "At AI-Solution, we believe in transparency, creativity, and the power of visual storytelling. Explore our photo galleries to witness the people, projects, and moments",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16),
           ),
@@ -194,7 +194,7 @@ class _GalleryPageState extends State<GalleryPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 60),
                     child: Text(
-                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dumm Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dumm",
+                      "At AI-Solution, we specialize in crafting intuitive tools and tailored software solutions that simplify operations, empower decision-making, and drive growth. From smart inquiry forms to end-to-end software development, we turn complexity into clarity",
                       textAlign: TextAlign.center,
                     ),
                   )

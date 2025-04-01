@@ -117,18 +117,18 @@ class _FeedbackAndRatingPanelState extends State<FeedbackAndRatingPanel> {
                     );
                   } else if (state is RatingLoaded) {
                     return SizedBox(
-                      height: 90,
+                      height: 105,
                       width: MediaQuery.of(context).size.width * 1 - 70,
                       child: ListView.separated(
-                        separatorBuilder: (context, index) => const Gap(60),
+                        separatorBuilder: (context, index) => const Gap(55),
                         scrollDirection: Axis.horizontal,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => GestureDetector(
                           onTap: () {},
                           child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 3),
+                            margin: EdgeInsets.only(top: 7,bottom: 7, left: 6),
                             padding: EdgeInsets.all(5),
-                            height: 256,
+                            height: 250,
                             width: 200,
                             decoration: BoxDecoration(
                                 color: Colors.white,

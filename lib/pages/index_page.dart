@@ -257,7 +257,7 @@ class _IndexPageState extends State<IndexPage> {
                   SizedBox(
                     width: 350,
                     child: Text(
-                      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an",
+                      "At Ai-Solution, we redefine how businesses connect, support, and grow. Our cutting-edge AI Virtual Assistant Chatbot is engineered to elevate customer experiences and streamline operations",
                       style: TextStyle(color: Colors.white),
                     ),
                   )

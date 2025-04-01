@@ -3,7 +3,7 @@
 import 'package:ai_solution/BLoC/events/events_bloc.dart';
 import 'package:ai_solution/BLoC/events/events_states.dart';
 import 'package:ai_solution/data/vos/event_vo.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -321,7 +321,7 @@ class _EventsPageState extends State<EventsPage> {
             SizedBox(
               width: 500,
               child: Text(
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ypesetting industry. Lorem Ipsum has been the",
+                "Stay ahead of the curve with our curated lineup of tech workshops, talks, and seminars designed for innovators, business leaders, and developers.",
               ),
             ),
             const Gap(40),

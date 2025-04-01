@@ -72,7 +72,7 @@ class _AboutPageState extends State<AboutPage> {
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.7,
           child: Text(
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to ",
+            "At AI-solution, our greatest pride lies in the success of our clients. Discover how our software solutions and services have transformed workflows, driven growth, and earned the trust of businesses worldwide",
             style: TextStyle(fontSize: 20),
             textAlign: TextAlign.center,
           ),
@@ -97,7 +97,7 @@ class _AboutPageState extends State<AboutPage> {
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) => Container(
-                                margin: EdgeInsets.symmetric(vertical: 5),
+                                margin: EdgeInsets.only(top: 7, bottom: 7, left: 6),
                                 width: 170,
                                 // decoration: BoxDecoration(
                                 //     border: Border.all(width: 1),
@@ -151,7 +151,7 @@ class _AboutPageState extends State<AboutPage> {
                                   ],
                                 ),
                               ),
-                          separatorBuilder: (context, index) => const Gap(40),
+                          separatorBuilder: (context, index) => const Gap(35),
                           itemCount: state.rating.length);
                     } else {
                       return SizedBox();

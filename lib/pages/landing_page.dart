@@ -455,7 +455,7 @@ class _LandingPageState extends State<LandingPage> {
             SizedBox(
               width: 400,
               child: Text(
-                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the",
+                "At AI-Solution, we redefine how businesses connect, support, and grow with our AI Virtual Assistant Chatbot",
               ),
             ),
             const Gap(20),
