@@ -423,7 +423,8 @@ class _LandingPageState extends State<LandingPage> {
                           fit: BoxFit.fill,
                         ),
                     separatorBuilder: (context, index) => const Gap(120),
-                    itemCount: state.clients.length),
+                    itemCount:
+                        state.clients.length >= 6 ? 6 : state.clients.length),
               ),
             );
           } else if (state is ClientsError) {

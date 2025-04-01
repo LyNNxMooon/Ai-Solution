@@ -1,19 +1,17 @@
 // ignore_for_file: deprecated_member_use
 
-import 'package:ai_solution/BLoC/current_solutions/current_solutions_bloc.dart';
-import 'package:ai_solution/BLoC/current_solutions/current_solutions_events.dart';
-import 'package:ai_solution/BLoC/current_solutions/current_solutions_states.dart';
+import 'package:ai_solution/BLoC/gallery/gallery_bloc.dart';
+import 'package:ai_solution/BLoC/gallery/gallery_events.dart';
+import 'package:ai_solution/BLoC/gallery/galllery_states.dart';
 import 'package:ai_solution/constant/colors.dart';
-import 'package:ai_solution/data/vos/current_solution_vo.dart';
+
+import 'package:ai_solution/data/vos/gallery_vo.dart';
 import 'package:ai_solution/utils/navigation_extension.dart';
-import 'package:ai_solution/widgets/confirmation_widget.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class GalleryPanel extends StatefulWidget {
   const GalleryPanel({super.key});
@@ -23,27 +21,18 @@ class GalleryPanel extends StatefulWidget {
 }
 
 class _GalleryPanelState extends State<GalleryPanel> {
-  late final currentSolutionBloc = context.read<CurrentSolutionsBloc>();
-  late final addCurrentSolutionBloc = context.read<AddCurrentSolutionsBloc>();
-  late final updateCurrentSolutionBloc =
-      context.read<UpdateCurrentSolutionsBloc>();
-  late final deleteCurrentSolutionBloc =
-      context.read<DeleteCurrentSolutionsBloc>();
+  late final galleryBloc = context.read<GalleryBloc>();
 
   final _nameController = TextEditingController();
   final _bodyController = TextEditingController();
-  final _newNameController = TextEditingController();
-  final _newDescriptionController = TextEditingController();
-  final _urlController = TextEditingController();
+
   bool selectAll = false;
 
-  @override
+  @override 
   void dispose() {
     _nameController.dispose();
     _bodyController.dispose();
-    _newNameController.dispose();
-    _newDescriptionController.dispose();
-    _urlController.dispose();
+
     super.dispose();
   }
 
@@ -61,12 +50,7 @@ class _GalleryPanelState extends State<GalleryPanel> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => addSolutionWidget(),
-                  );
-                },
+                onTap: () {},
                 child: Container(
                   width: 160,
                   height: 30,
@@ -147,14 +131,14 @@ class _GalleryPanelState extends State<GalleryPanel> {
               Row(
                 children: [
                   Text(
-                    "Current Solutions",
+                    "Company Galleries",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: IconButton(
                         onPressed: () {
-                          currentSolutionBloc.add(FetchCurrentSolutions());
+                          galleryBloc.add(FetchGallery());
                         },
                         icon: Icon(Icons.refresh_sharp)),
                   )
@@ -164,15 +148,15 @@ class _GalleryPanelState extends State<GalleryPanel> {
                 height: 80,
                 thickness: 0.8,
               ),
-              BlocBuilder<CurrentSolutionsBloc, CurrentSolutionsStates>(
+              BlocBuilder<GalleryBloc, GalleryStates>(
                 builder: (context, state) {
-                  if (state is CurrentSolutionsLoading) {
+                  if (state is GalleryLoading) {
                     return shimmerLoadingCurrentSolutions();
-                  } else if (state is CurrentSolutionsError) {
+                  } else if (state is GalleryError) {
                     return Center(
                       child: Text(state.message),
                     );
-                  } else if (state is CurrentSolutionsLoaded) {
+                  } else if (state is GalleryLoaded) {
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -187,8 +171,8 @@ class _GalleryPanelState extends State<GalleryPanel> {
                         onTap: () {
                           showDialog(
                             context: context,
-                            builder: (context) => detailedSolutionWidget(
-                                state.currentSolutions[index]),
+                            builder: (context) =>
+                                detailedSolutionWidget(state.galleries[index]),
                           );
                         },
                         child: Container(
@@ -212,13 +196,13 @@ class _GalleryPanelState extends State<GalleryPanel> {
                                 height:
                                     MediaQuery.of(context).size.height * 0.25,
                                 child: Image.network(
-                                  state.currentSolutions[index].url,
+                                  state.galleries[index].url,
                                   fit: BoxFit.cover,
                                 ),
                               ),
                               const Gap(25),
                               Text(
-                                state.currentSolutions[index].name,
+                                state.galleries[index].name,
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                               ),
@@ -227,12 +211,10 @@ class _GalleryPanelState extends State<GalleryPanel> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 50),
                                 child: Text(
-                                  state.currentSolutions[index].description
-                                              .length >=
+                                  state.galleries[index].description.length >=
                                           45
-                                      ? "${state.currentSolutions[index].description.substring(0, 45)} ...."
-                                      : state
-                                          .currentSolutions[index].description,
+                                      ? "${state.galleries[index].description.substring(0, 45)} ...."
+                                      : state.galleries[index].description,
                                   textAlign: TextAlign.center,
                                 ),
                               )
@@ -240,7 +222,7 @@ class _GalleryPanelState extends State<GalleryPanel> {
                           ),
                         ),
                       ),
-                      itemCount: state.currentSolutions.length,
+                      itemCount: state.galleries.length,
                     );
                   } else {
                     return SizedBox();
@@ -254,7 +236,7 @@ class _GalleryPanelState extends State<GalleryPanel> {
     );
   }
 
-  Widget detailedSolutionWidget(CurrentSolutionVO solution) {
+  Widget detailedSolutionWidget(GalleryVO solution) {
     _nameController.text = solution.name;
     _bodyController.text = solution.description;
     return AlertDialog(
@@ -350,257 +332,28 @@ class _GalleryPanelState extends State<GalleryPanel> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  BlocConsumer<UpdateCurrentSolutionsBloc,
-                      UpdateCurrentSolutionStates>(
-                    builder: (context, state) {
-                      if (state is UpdateCurrentSolutionLoading) {
-                        return Center(child: CupertinoActivityIndicator());
-                      } else {
-                        return Center(
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                      kMessageBubbleColor),
-                                  foregroundColor:
-                                      WidgetStatePropertyAll(kFourthColor)),
-                              onPressed: () {
-                                updateCurrentSolutionBloc.add(
-                                    UpdateCurrrentSolution(
-                                        id: solution.id,
-                                        description: _bodyController.text,
-                                        name: _nameController.text,
-                                        url: solution.url));
-                              },
-                              child: Text("Update")),
-                        );
-                      }
-                    },
-                    listener: (context, state) {
-                      if (state is UpdateCurrentSolutionError) {
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          CustomSnackBar.error(
-                            message: state.message,
-                          ),
-                        );
-                      }
-
-                      if (state is CurrentSolutionUpdated) {
-                        currentSolutionBloc.add(FetchCurrentSolutions());
-                        context.navigateBack();
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          CustomSnackBar.success(
-                            message: state.message,
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              WidgetStatePropertyAll(kMessageBubbleColor),
+                          foregroundColor:
+                              WidgetStatePropertyAll(kFourthColor)),
+                      onPressed: () {},
+                      child: Text("Update")),
                   const Gap(40),
-                  BlocConsumer<DeleteCurrentSolutionsBloc,
-                      DeleteCurrentSolutionStates>(
-                    builder: (context, state) {
-                      if (state is DeleteeCurrentSolutionLoading) {
-                        return Center(child: CupertinoActivityIndicator());
-                      } else {
-                        return Center(
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll(Colors.red),
-                                  foregroundColor:
-                                      WidgetStatePropertyAll(kFourthColor)),
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => ConfirmationWidget(
-                                    message:
-                                        "Are you sure to delete this current solution forever?",
-                                    function: () {
-                                      deleteCurrentSolutionBloc
-                                          .add(DeleteCurrentSolution(
-                                        id: solution.id,
-                                      ));
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Delete",
-                                style: TextStyle(color: Colors.white),
-                              )),
-                        );
-                      }
-                    },
-                    listener: (context, state) {
-                      if (state is DeleteCurrentSolutionError) {
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          CustomSnackBar.error(
-                            message: state.message,
-                          ),
-                        );
-                      }
-
-                      if (state is CurrentSolutionDeleted) {
-                        currentSolutionBloc.add(FetchCurrentSolutions());
-                        context.navigateBack();
-                        context.navigateBack();
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          CustomSnackBar.success(
-                            message: state.message,
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(Colors.red),
+                          foregroundColor:
+                              WidgetStatePropertyAll(kFourthColor)),
+                      onPressed: () {},
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(color: Colors.white),
+                      )),
                 ],
               ),
               const Gap(20)
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget addSolutionWidget() {
-    return AlertDialog(
-      contentPadding: EdgeInsets.all(0),
-      content: Material(
-        elevation: 8,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          width: 600,
-          height: 550,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            children: [
-              // Chat Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Add Current Solution",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  IconButton(
-                    icon: Icon(Icons.close),
-                    onPressed: () {
-                      context.navigateBack();
-                    },
-                  ),
-                ],
-              ),
-              const Gap(10),
-              Divider(),
-              const Gap(10),
-              TextField(
-                controller: _urlController,
-                decoration: InputDecoration(
-                  hintText: "Solution Photo URl",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                ),
-              ),
-              const Gap(10),
-              Divider(),
-              const Gap(10),
-              TextField(
-                controller: _newNameController,
-                decoration: InputDecoration(
-                  hintText: "Current Solution Name",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                ),
-              ),
-              const Gap(15),
-
-              TextField(
-                // minLines: 2,
-                controller: _newDescriptionController,
-                maxLines: 8,
-                decoration: InputDecoration(
-                  hintText: "Description...",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: kFourthColor)),
-                  // suffixIcon: Icon(Icons.send),
-                ),
-              ),
-              const Gap(30),
-              BlocConsumer<AddCurrentSolutionsBloc, AddCurrentSolutionStates>(
-                builder: (context, state) {
-                  if (state is AddCurrentSolutionLoading) {
-                    return Center(child: CupertinoActivityIndicator());
-                  } else {
-                    return Center(
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  WidgetStatePropertyAll(kMessageBubbleColor),
-                              foregroundColor:
-                                  WidgetStatePropertyAll(kFourthColor)),
-                          onPressed: () {
-                            addCurrentSolutionBloc.add(AddCurrentSolution(
-                                description: _newDescriptionController.text,
-                                name: _newNameController.text,
-                                url: _urlController.text));
-                          },
-                          child: Text("Add")),
-                    );
-                  }
-                },
-                listener: (context, state) {
-                  if (state is AddCurrentSolutionError) {
-                    showTopSnackBar(
-                      Overlay.of(context),
-                      CustomSnackBar.error(
-                        message: state.message,
-                      ),
-                    );
-                  }
-
-                  if (state is CurrentSolutionAdded) {
-                    currentSolutionBloc.add(FetchCurrentSolutions());
-                    _urlController.clear();
-                    _newDescriptionController.clear();
-                    _newNameController.clear();
-                    context.navigateBack();
-                    showTopSnackBar(
-                      Overlay.of(context),
-                      CustomSnackBar.success(
-                        message: state.message,
-                      ),
-                    );
-                  }
-                },
-              )
             ],
           ),
         ),
